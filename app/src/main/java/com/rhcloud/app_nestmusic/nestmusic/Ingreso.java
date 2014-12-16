@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
-
+/**
+ * @author Jose Luis
+ */
 public class Ingreso extends Activity {
 
     @Override
