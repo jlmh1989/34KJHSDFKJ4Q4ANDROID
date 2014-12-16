@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NestMusic</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Pantalla login -->
+    <string name="btn_registro">Registrarse</string>
+    <string name="btn_ingresar">Ingresar</string>
+    <string name="btn_continuarSinRegistro">Continuar sin registro</string>
+    <string name="lbl_mensajeBienvenido">Bienvenido a Net Music</string>
+    <!-- Fin Pantalla login -->
+
+    <string name="title_activity_registro">Registro</string>
+    <string name="title_activity_ingreso">Ingreso</string>
+
+</resources>
