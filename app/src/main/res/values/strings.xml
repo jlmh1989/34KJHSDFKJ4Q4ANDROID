@@ -2,14 +2,15 @@
 <resources>
 
     <string name="app_name">NestMusic</string>
-    <string name="action_settings">Settings</string>
 
-    <!-- Pantalla login -->
-    <string name="btn_registro">Registrarse</string>
-    <string name="btn_ingresar">Ingresar</string>
-    <string name="btn_continuarSinRegistro">Continuar sin registro</string>
-    <string name="lbl_mensajeBienvenido">Bienvenido a Net Music</string>
-    <!-- Fin pantalla login -->
+    <!-- Pantalla inicio -->
+    <string name="btn_registro">REGISTRO</string>
+    <string name="btn_ingresar">INICIAR SESIÓN</string>
+    <string name="btn_continuarSinRegistro">CONTINUAR SIN REGISTRO</string>
+    <string name="btn_solcitarValidacion">SOLICITAR VALIDACIÓN REGISTRO</string>
+    <string name="lbl_mensajeBienvenido">Bienvenido a Nest Music</string>
+    <!-- Fin pantalla inicio -->
+
 
     <!-- Pantalla registro -->
     <string name="et_usuario">Usuario</string>
@@ -17,18 +18,30 @@
     <string name="et_nombre">Nombre</string>
     <string name="et_apellidos">Apellidos</string>
     <string name="et_email">Email</string>
-    <string name="et_fechaNacimiento">Fecha de nacimiento</string>
+    <string name="et_fechaNacimiento">Fecha nacimiento (dd-mm-aaaa)</string>
     <string name="lb_mensajeDatosAcceso">Datos de acesso</string>
     <string name="lb_mensajeDatosPersonales">Datos personales</string>
-    <string name="btn_continuar">Continuar</string>
-    <string name="btn_limpiar">Limpiar</string>
+    <string name="btn_continuar">REGISTRARSE</string>
     <!-- FIn pantalla registro -->
 
-    <!-- Pantalla ingreso -->
 
-    <!-- Fin pantalla ingreso -->
-    
-    <string name="title_activity_registro">Registro</string>
-    <string name="title_activity_ingreso">Ingreso</string>
+    <!-- Pantalla login -->
+    <string name="btn_login">INICIAR SESIÓN</string>
+    <string name="btn_recuperarPass">¿Olvidó su contraseña?</string>
+    <!-- Fin Pantalla login -->
+
+
+    <!-- Pantalla recuperar datos -->
+    <string name="btn_recuperarDatos">ENVIAR DATOS</string>
+    <!-- Fin pantalla recuperar datos -->
+
+    <!-- Pantalla solicitar validacion -->
+    <string name="lb_solicitarValidacion">Por favor ingrese el nombre de usuario que registró, se enviará un correo para validar su registro.</string>
+    <!-- Fin pantalla solicitar validacion -->
+
+    <string name="title_activity_registro">REGISTRO</string>
+    <string name="title_activity_ingreso">INICIAR SESIÓN</string>
+    <string name="title_activity_recuperar_password">RECUPERAR CONTRASEÑA</string>
+    <string name="title_activity_solicitar_validacion">SOLICITAR VALIDACIÓN</string>
 
 </resources>

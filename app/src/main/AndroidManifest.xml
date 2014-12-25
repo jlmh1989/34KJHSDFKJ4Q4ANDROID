@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rhcloud.app_nestmusic.nestmusic" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -19,18 +21,34 @@
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.Ingreso"
             android:label="@string/title_activity_ingreso"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.Registro"
             android:label="@string/title_activity_registro"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name="com.rhcloud.app_nestmusic.nestmusic.RecuperarPasswordActivity"
+            android:label="@string/title_activity_recuperar_password"
+            android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.Ingreso" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.rhcloud.app_nestmusic.nestmusic.Ingreso" />
+        </activity>
+        <activity
+            android:name="com.rhcloud.app_nestmusic.nestmusic.SolicitarValidacionActivity"
+            android:label="@string/title_activity_solicitar_validacion"
+            android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
     </application>
 

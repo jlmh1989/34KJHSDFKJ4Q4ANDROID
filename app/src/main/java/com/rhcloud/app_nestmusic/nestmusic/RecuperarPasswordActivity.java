@@ -1,20 +1,15 @@
 package com.rhcloud.app_nestmusic.nestmusic;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -28,31 +23,18 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-/**
- * @author Jose Luis
- */
-public class Registro extends Activity {
+public class RecuperarPasswordActivity extends Activity {
 
-    private EditText usuario;
-    private EditText password;
-    private EditText nombre;
-    private EditText apellidos;
-    private EditText correo;
-    private EditText fechaNacimiento;
+    private EditText email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
+        setContentView(R.layout.activity_recuperar_password);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        usuario = (EditText) findViewById(R.id.et_usuario);
-        password = (EditText) findViewById(R.id.et_password);
-        nombre = (EditText) findViewById(R.id.et_nombre);
-        apellidos = (EditText) findViewById(R.id.et_apellidos);
-        correo = (EditText) findViewById(R.id.et_correo);
-        fechaNacimiento = (EditText) findViewById(R.id.et_fechaNac);
+        email = (EditText) findViewById(R.id.et_email);
     }
 
     @Override
@@ -66,41 +48,26 @@ public class Registro extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void guardarRegistro(View view){
-        String usuario = this.usuario.getText().toString();
-        String password = this.password.getText().toString();
-        String nombre = this.nombre.getText().toString();
-        String apellidos = this.apellidos.getText().toString();
-        String correo = this.correo.getText().toString();
-        String fechaNac = this.fechaNacimiento.getText().toString();
-
-        new RequestRest().execute(usuario, password, nombre, apellidos, correo, fechaNac);
+    public void enviarDatos(View view){
+        String emailTxt = email.getText().toString();
+        new RequestRest().execute(emailTxt);
     }
 
     private void mostrarNotificacion(String mensaje){
         Utils.mostrarNotificacion(this, mensaje);
     }
 
-    /**
-     * Ejecutar request REST
-     */
-    private class RequestRest extends AsyncTask<String, Integer, Integer>{
+    private class RequestRest extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected Integer doInBackground(String... params) {
             HttpClient httpClient = new DefaultHttpClient();
-            String pass = UtilPassword.encodePassword(params[1]);
-            String url = Uri.parse(Constantes.REGISTRO_ENDPOINT)
+            String url = Uri.parse(Constantes.RECUPERARPASS_ENDPOINT)
                     .buildUpon()
-                    .appendQueryParameter("usuario",params[0])
-                    .appendQueryParameter("password",pass)
-                    .appendQueryParameter("nombre",params[2])
-                    .appendQueryParameter("apellidos",params[3])
-                    .appendQueryParameter("correo",params[4])
-                    .appendQueryParameter("fechaNacimiento",params[5])
+                    .appendQueryParameter("correo", params[0])
                     .build().toString();
             HttpPost post = new HttpPost(url);
-            try {
+            try{
                 HttpResponse response = httpClient.execute(post);
                 String respStr = EntityUtils.toString(response.getEntity());
 
@@ -113,7 +80,7 @@ public class Registro extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mostrarNotificacion("Usuario creado exitosamente");
+                            mostrarNotificacion("Datos enviados al correo.");
                         }
                     });
                 }else{

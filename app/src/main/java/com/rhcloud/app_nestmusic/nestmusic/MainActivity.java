@@ -25,4 +25,9 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, Ingreso.class);
         startActivity(intent);
     }
+
+    public void solicitarValidacionOnClick(View view){
+        Intent intent = new Intent(this, SolicitarValidacionActivity.class);
+        startActivity(intent);
+    }
 }
