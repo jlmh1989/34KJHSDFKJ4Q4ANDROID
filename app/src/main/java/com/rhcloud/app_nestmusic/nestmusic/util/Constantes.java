@@ -24,6 +24,7 @@ public class Constantes {
     public static final String REGISTRO_ENDPOINT = SERVER + "/servicios/rest/usuario/registro?";
     public static final String RECUPERARPASS_ENDPOINT = SERVER + "/servicios/rest/usuario/recuperarDatos?";
     public static final String SOLICITUDVALIDACION_ENDPOINT = SERVER + "/servicios/rest/usuario/reenviarCorreoValidacion?";
+    public static final String CERRAR_SESION_ENDPOINT = SERVER + "/servicios/rest/usuario/logout?";
 
     public static final int FAVORITOS = 0;
     public static final int LISTA_REPROD = 1;

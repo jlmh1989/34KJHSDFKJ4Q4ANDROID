@@ -60,6 +60,8 @@
     <string name="usuario_creado">"Usuario creado exitosamente."</string>
     <string name="titulo_dialog_info">Información</string>
     <string name="mensaje_registro">Usuario creado exitosamente. Se envió un enlace a su correo electrónico, por favor de validar su registro.</string>
+    <string name="cerrar_sesion">¿Esta seguro de terminar la sesión?</string>
+    <string name="cerrar_sesion:titulo">Cerrar sesión</string>
     <!-- Fin mensajes -->
 
 
