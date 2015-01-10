@@ -109,12 +109,14 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="date"
+                    android:inputType="none"
                     android:ems="10"
                     android:id="@+id/et_fechaNac"
                     android:layout_gravity="center_horizontal"
                     android:hint="@string/et_fechaNacimiento"
-                    android:paddingBottom="20dp" />
+                    android:paddingBottom="20dp"
+                    android:onClick="seleccionarFechaNacimiento"
+                    android:editable="false" />
 
             </LinearLayout>
             </RelativeLayout>

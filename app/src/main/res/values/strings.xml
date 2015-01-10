@@ -18,7 +18,7 @@
     <string name="et_nombre">Nombre</string>
     <string name="et_apellidos">Apellidos</string>
     <string name="et_email">Email</string>
-    <string name="et_fechaNacimiento">Fecha nacimiento (dd-mm-aaaa)</string>
+    <string name="et_fechaNacimiento">Fecha nacimiento</string>
     <string name="lb_mensajeDatosAcceso">Datos de acesso</string>
     <string name="lb_mensajeDatosPersonales">Datos personales</string>
     <string name="btn_continuar">REGISTRARSE</string>
@@ -35,13 +35,46 @@
     <string name="btn_recuperarDatos">ENVIAR DATOS</string>
     <!-- Fin pantalla recuperar datos -->
 
+
     <!-- Pantalla solicitar validacion -->
     <string name="lb_solicitarValidacion">Por favor ingrese el nombre de usuario que registró, se enviará un correo para validar su registro.</string>
     <!-- Fin pantalla solicitar validacion -->
 
+
+    <!-- Titulos de vistas -->
     <string name="title_activity_registro">REGISTRO</string>
     <string name="title_activity_ingreso">INICIAR SESIÓN</string>
     <string name="title_activity_recuperar_password">RECUPERAR CONTRASEÑA</string>
     <string name="title_activity_solicitar_validacion">SOLICITAR VALIDACIÓN</string>
+    <string name="title_activity_home">INICIO</string>
+    <!-- Fin titulos de vistas -->
+
+
+    <!-- Mensajea -->
+    <string name="error_conexion">Error de conexión.</string>
+    <string name="error_servidor">No se puede conectar con el servidor.</string>
+    <string name="error_datos">Error al recibir los datos.</string>
+    <string name="email_validacion_enviado">Correo de validación enviado.</string>
+    <string name="email_recuperar_pass">Datos enviados al correo.</string>
+    <string name="cargando">Cargando...</string>
+    <string name="usuario_creado">"Usuario creado exitosamente."</string>
+    <string name="titulo_dialog_info">Información</string>
+    <string name="mensaje_registro">Usuario creado exitosamente. Se envió un enlace a su correo electrónico, por favor de validar su registro.</string>
+    <!-- Fin mensajes -->
+
+
+    <!-- Elelementos del menu lateral -->
+    <string name="menu_favoritos">Favoritos</string>
+    <string name="menu_lista_Rep">Lista reproducción</string>
+    <string name="menu_historial_Rep">Historial reproducción</string>
+    <string name="menu_descargas">Descargas</string>
+    <string name="menu_fin_sesion">Cerrar sesión</string>
+    <!-- Fin elelementos del menu lateral -->
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
