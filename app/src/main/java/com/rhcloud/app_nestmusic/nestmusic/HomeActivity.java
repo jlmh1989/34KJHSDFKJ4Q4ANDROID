@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +48,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.io.IOException;
 
 
 public class HomeActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchView.OnQueryTextListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -110,10 +113,13 @@ public class HomeActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Toast.makeText(this, "Item seleccionado " + position, Toast.LENGTH_SHORT).show();
-
         FragmentManager fragmentManager = getFragmentManager();
         switch (position) {
+            case Constantes.INICIO:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
+                        .commit();
+                break;
             case Constantes.FAVORITOS:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, PlaceholderFragment.newInstance(position))
@@ -159,8 +165,15 @@ public class HomeActivity extends Activity
         }
     }
 
+    /**
+     * Asignar titulo Activity dependiendo de la seccion seleccionada
+     * @param number
+     */
     public void onSectionAttached(int number) {
         switch (number) {
+            case Constantes.INICIO:
+                mTitle = getString(R.string.menu_inicio);
+                break;
             case Constantes.FAVORITOS:
                 mTitle = getString(R.string.menu_favoritos);
                 break;
@@ -194,10 +207,33 @@ public class HomeActivity extends Activity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.home, menu);
+
+            // Associate searchable configuration with the SearchView
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) menu.findItem(R.id.action_busqueda)
+                    .getActionView();
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getComponentName()));
+            searchView.setSubmitButtonEnabled(true);
+            searchView.setOnQueryTextListener(this);
             restoreActionBar();
+
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText)
+    {
+        return true;
+    }
+    @Override
+    public boolean onQueryTextSubmit(String query)
+    {
+        Log.i("busqueda", query);
+        mostrarNotificacion(query);
+        return true;
     }
 
     @Override
@@ -207,9 +243,41 @@ public class HomeActivity extends Activity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+
+            case R.id.action_busqueda:
+                mostrarNotificacion("Presionado busqueda");
+                return true;
+
+            case R.id.action_settings:
+                return true;
+
+            case R.id.action_salir:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(getString(R.string.cerrar_app))
+                        .setTitle(getString(R.string.cerrar_app_titulo))
+                        .setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener(){
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Cerrar app
+                                Intent intent = new Intent(Intent.ACTION_MAIN);
+                                intent.addCategory(Intent.CATEGORY_HOME);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //No hacer nada
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            break;
         }
 
         return super.onOptionsItemSelected(item);

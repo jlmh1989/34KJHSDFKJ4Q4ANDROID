@@ -18,7 +18,7 @@ public class Constantes {
 
     public static final int CONEXION_TIMEOUT = 10000;
     public static final int SOCKET_TIMEOUT = 10000;
-    public static final String SERVER = "http://10.0.2.2:8080/servicios";
+    public static final String SERVER = "http://servicios-jlmh1989.rhcloud.com";//"http://10.0.2.2:8080/servicios";
 
     public static final String INGRESO_ENDPOINT = SERVER + "/servicios/rest/usuario/login?";
     public static final String REGISTRO_ENDPOINT = SERVER + "/servicios/rest/usuario/registro?";
@@ -26,10 +26,11 @@ public class Constantes {
     public static final String SOLICITUDVALIDACION_ENDPOINT = SERVER + "/servicios/rest/usuario/reenviarCorreoValidacion?";
     public static final String CERRAR_SESION_ENDPOINT = SERVER + "/servicios/rest/usuario/logout?";
 
-    public static final int FAVORITOS = 0;
-    public static final int LISTA_REPROD = 1;
-    public static final int HISTO_REPROD = 2;
-    public static final int DESCARGAS = 3;
-    public static final int CERRAR_SESION = 4;
+    public static final int INICIO = 0;
+    public static final int FAVORITOS = 1;
+    public static final int LISTA_REPROD = 2;
+    public static final int HISTO_REPROD = 3;
+    public static final int DESCARGAS = 4;
+    public static final int CERRAR_SESION = 5;
 
 }

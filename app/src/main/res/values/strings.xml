@@ -61,11 +61,14 @@
     <string name="titulo_dialog_info">Información</string>
     <string name="mensaje_registro">Usuario creado exitosamente. Se envió un enlace a su correo electrónico, por favor de validar su registro.</string>
     <string name="cerrar_sesion">¿Esta seguro de terminar la sesión?</string>
-    <string name="cerrar_sesion:titulo">Cerrar sesión</string>
+    <string name="cerrar_app">¿Esta seguro de cerrar la aplicación?</string>
+    <string name="cerrar_sesion_titulo">Cerrar sesión</string>
+    <string name="cerrar_app_titulo">Cerrar aplicación</string>
     <!-- Fin mensajes -->
 
 
-    <!-- Elelementos del menu lateral -->
+    <!-- Elementos del menu lateral -->
+    <string name="menu_inicio">Inicio</string>
     <string name="menu_favoritos">Favoritos</string>
     <string name="menu_lista_Rep">Lista reproducción</string>
     <string name="menu_historial_Rep">Historial reproducción</string>
@@ -73,10 +76,14 @@
     <string name="menu_fin_sesion">Cerrar sesión</string>
     <!-- Fin elelementos del menu lateral -->
 
+    <!-- Elementos del menu principal -->
+    <string name="action_settings">Configurar</string>
+    <string name="action_salir">Salir</string>
+    <string name="action_busqueda">Busqueda</string>
+    <!-- Fin -->
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
-    <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

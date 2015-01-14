@@ -54,6 +54,13 @@
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.HomeActivity"
             android:label="@string/title_activity_home" >
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            -->
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"></meta-data>
         </activity>
     </application>
 
