@@ -64,6 +64,11 @@
     <string name="cerrar_app">¿Esta seguro de cerrar la aplicación?</string>
     <string name="cerrar_sesion_titulo">Cerrar sesión</string>
     <string name="cerrar_app_titulo">Cerrar aplicación</string>
+    <string name="icono_menu">Icono</string>
+    <string name="sin_coincidencias">No se encontrarón coincidencias.</string>
+    <string name="artista_desconocido">Artista desconocido.</string>
+    <string name="duracion_cancion">Duración:</string>
+    <string name="desconocido">desconocido.</string>
     <!-- Fin mensajes -->
 
 

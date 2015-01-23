@@ -91,26 +91,38 @@ public class NavigationDrawerFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        String[] texto = {
+                getString(R.string.menu_inicio),
+                getString(R.string.menu_favoritos),
+                getString(R.string.menu_lista_Rep),
+                getString(R.string.menu_historial_Rep),
+                getString(R.string.menu_descargas),
+                getString(R.string.menu_fin_sesion)
+        };
+
+        Integer[] imagenId = {
+                R.drawable.inicio,
+                R.drawable.favoritos,
+                R.drawable.lista_rep,
+                R.drawable.historial_rep,
+                R.drawable.descargas,
+                R.drawable.cerrar_sesion
+        };
+
+        ListaMenu adapter = new ListaMenu(getActivity(), texto, imagenId);
+
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
+        mDrawerListView.setAdapter(adapter);
+
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.menu_inicio),
-                        getString(R.string.menu_favoritos),
-                        getString(R.string.menu_lista_Rep),
-                        getString(R.string.menu_historial_Rep),
-                        getString(R.string.menu_descargas),
-                        getString(R.string.menu_fin_sesion)
-                }));
+
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }

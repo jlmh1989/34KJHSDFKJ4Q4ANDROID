@@ -9,10 +9,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,6 +23,7 @@
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.Ingreso"
             android:label="@string/title_activity_ingreso"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -30,6 +32,7 @@
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.Registro"
             android:label="@string/title_activity_registro"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -38,6 +41,7 @@
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.RecuperarPasswordActivity"
             android:label="@string/title_activity_recuperar_password"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.Ingreso" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -46,6 +50,7 @@
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.SolicitarValidacionActivity"
             android:label="@string/title_activity_solicitar_validacion"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.rhcloud.app_nestmusic.nestmusic.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -53,12 +58,11 @@
         </activity>
         <activity
             android:name="com.rhcloud.app_nestmusic.nestmusic.HomeActivity"
-            android:label="@string/title_activity_home" >
-            <!--
+            android:label="@string/title_activity_home"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            -->
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable"></meta-data>
         </activity>

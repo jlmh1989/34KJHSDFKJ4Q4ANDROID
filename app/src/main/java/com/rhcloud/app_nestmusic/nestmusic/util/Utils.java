@@ -12,7 +12,7 @@ import android.widget.Toast;
 public class Utils {
 
     public static void mostrarNotificacion(Context context, String mensaje){
-        Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show();
     }
 
     public static boolean conectadoInternet(Activity activity){

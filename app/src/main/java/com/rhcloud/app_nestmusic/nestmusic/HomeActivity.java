@@ -53,7 +53,7 @@ import java.io.IOException;
 
 
 public class HomeActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, SearchView.OnQueryTextListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -61,6 +61,7 @@ public class HomeActivity extends Activity
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private ProgressDialog progressDialog;
+    private int seccionActiva;
 
     private String usuario;
     private String token;
@@ -117,22 +118,22 @@ public class HomeActivity extends Activity
         switch (position) {
             case Constantes.INICIO:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
+                        .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
             case Constantes.FAVORITOS:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
+                        .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
             case Constantes.LISTA_REPROD:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
+                        .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
             case Constantes.HISTO_REPROD:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, PlaceholderFragment.newInstance(position))
+                        .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
             case Constantes.DESCARGAS:
@@ -170,6 +171,7 @@ public class HomeActivity extends Activity
      * @param number
      */
     public void onSectionAttached(int number) {
+        seccionActiva = number;
         switch (number) {
             case Constantes.INICIO:
                 mTitle = getString(R.string.menu_inicio);
@@ -209,13 +211,13 @@ public class HomeActivity extends Activity
             getMenuInflater().inflate(R.menu.home, menu);
 
             // Associate searchable configuration with the SearchView
-            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            SearchView searchView = (SearchView) menu.findItem(R.id.action_busqueda)
-                    .getActionView();
-            searchView.setSearchableInfo(searchManager
-                    .getSearchableInfo(getComponentName()));
-            searchView.setSubmitButtonEnabled(true);
-            searchView.setOnQueryTextListener(this);
+            //SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            //SearchView searchView = (SearchView) menu.findItem(R.id.action_busqueda)
+            //        .getActionView();
+            //searchView.setSearchableInfo(searchManager
+            //        .getSearchableInfo(getComponentName()));
+            //searchView.setSubmitButtonEnabled(true);
+            //searchView.setOnQueryTextListener(this);
             restoreActionBar();
 
             return true;
@@ -223,6 +225,7 @@ public class HomeActivity extends Activity
         return super.onCreateOptionsMenu(menu);
     }
 
+    /*
     @Override
     public boolean onQueryTextChange(String newText)
     {
@@ -231,10 +234,27 @@ public class HomeActivity extends Activity
     @Override
     public boolean onQueryTextSubmit(String query)
     {
+        switch (seccionActiva) {
+            case Constantes.INICIO:
+
+                break;
+            case Constantes.FAVORITOS:
+
+                break;
+            case Constantes.LISTA_REPROD:
+
+                break;
+            case Constantes.HISTO_REPROD:
+
+                break;
+            case Constantes.DESCARGAS:
+
+                break;
+        }
         Log.i("busqueda", query);
         mostrarNotificacion(query);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -244,11 +264,6 @@ public class HomeActivity extends Activity
         int id = item.getItemId();
 
         switch (id) {
-
-            case R.id.action_busqueda:
-                mostrarNotificacion("Presionado busqueda");
-                return true;
-
             case R.id.action_settings:
                 return true;
 
@@ -289,46 +304,6 @@ public class HomeActivity extends Activity
      */
     private void mostrarNotificacion(String mensaje){
         Utils.mostrarNotificacion(this, mensaje);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((HomeActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
     }
 
     /**
