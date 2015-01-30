@@ -11,18 +11,12 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -97,6 +91,7 @@ public class NavigationDrawerFragment extends Fragment{
                 getString(R.string.menu_favoritos),
                 getString(R.string.menu_lista_Rep),
                 getString(R.string.menu_historial_Rep),
+                getString(R.string.menu_historial_descargas),
                 getString(R.string.menu_descargas),
                 getString(R.string.menu_fin_sesion)
         };
@@ -106,6 +101,7 @@ public class NavigationDrawerFragment extends Fragment{
                 R.drawable.favoritos,
                 R.drawable.lista_rep,
                 R.drawable.historial_rep,
+                R.drawable.historial_descarga,
                 R.drawable.descargas,
                 R.drawable.cerrar_sesion
         };

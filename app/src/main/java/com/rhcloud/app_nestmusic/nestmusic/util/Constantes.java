@@ -32,8 +32,9 @@ public class Constantes {
     public static final int FAVORITOS = 1;
     public static final int LISTA_REPROD = 2;
     public static final int HISTO_REPROD = 3;
-    public static final int DESCARGAS = 4;
-    public static final int CERRAR_SESION = 5;
+    public static final int HISTO_DESCARGAS = 4;
+    public static final int DESCARGAS = 5;
+    public static final int CERRAR_SESION = 6;
 
     public static final int LIMIT_RANDOM = 20;
 

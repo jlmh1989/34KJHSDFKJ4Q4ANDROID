@@ -98,7 +98,7 @@ public class Registro extends Activity {
         DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                fechaNacimiento.setText(dayOfMonth+"-"+(monthOfYear - 1)+"-"+year);
+                fechaNacimiento.setText(year+"-"+(monthOfYear - 1)+"-"+dayOfMonth);
             }
         }, mYear, mMonth, mDay);
         dpd.show();

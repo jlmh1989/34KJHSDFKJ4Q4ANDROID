@@ -4,36 +4,22 @@ import android.app.Activity;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rhcloud.app_nestmusic.nestmusic.bd.SesionSQLiteHelper;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
-import com.rhcloud.app_nestmusic.nestmusic.util.UtilPassword;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
 
 import org.apache.http.HttpResponse;
@@ -48,7 +34,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Console;
 import java.io.IOException;
 
 
@@ -61,7 +46,6 @@ public class HomeActivity extends Activity
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private ProgressDialog progressDialog;
-    private int seccionActiva;
 
     private String usuario;
     private String token;
@@ -136,6 +120,11 @@ public class HomeActivity extends Activity
                         .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
+            case Constantes.HISTO_DESCARGAS:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, Inicio.newInstance(position))
+                        .commit();
+                break;
             case Constantes.DESCARGAS:
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new Descargas().newInstance(position))
@@ -171,7 +160,6 @@ public class HomeActivity extends Activity
      * @param number
      */
     public void onSectionAttached(int number) {
-        seccionActiva = number;
         switch (number) {
             case Constantes.INICIO:
                 mTitle = getString(R.string.menu_inicio);
@@ -184,6 +172,9 @@ public class HomeActivity extends Activity
                 break;
             case Constantes.HISTO_REPROD:
                 mTitle = getString(R.string.menu_historial_Rep);
+                break;
+            case Constantes.HISTO_DESCARGAS:
+                mTitle = getString(R.string.menu_historial_descargas);
                 break;
             case Constantes.DESCARGAS:
                 mTitle = getString(R.string.menu_descargas);
