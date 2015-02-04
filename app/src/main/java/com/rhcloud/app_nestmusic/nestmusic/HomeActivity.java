@@ -19,6 +19,11 @@ import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 
 import com.rhcloud.app_nestmusic.nestmusic.bd.SesionSQLiteHelper;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Descargas;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Favoritos;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Inicio;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.ListaReproduccion;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.NavigationDrawerFragment;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
 
@@ -44,9 +49,8 @@ public class HomeActivity extends Activity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
     private ProgressDialog progressDialog;
-
+    private int fragmentoSeleccionado;
     private String usuario;
     private String token;
 
@@ -98,6 +102,7 @@ public class HomeActivity extends Activity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+        fragmentoSeleccionado = position;
         FragmentManager fragmentManager = getFragmentManager();
         switch (position) {
             case Constantes.INICIO:
@@ -106,31 +111,115 @@ public class HomeActivity extends Activity
                         .commit();
                 break;
             case Constantes.FAVORITOS:
+                if(usuario == null || usuario.isEmpty()){
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                        dialog.setTitle(getString(R.string.titulo_dialog_info));
+                        dialog.setMessage(getString(R.string.mensaje_no_sesion));
+                        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        dialog.create();
+                        dialog.show();
+                    break;
+                }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, Inicio.newInstance(position))
+                        .replace(R.id.container, Favoritos.newInstance(position, usuario, token))
                         .commit();
                 break;
             case Constantes.LISTA_REPROD:
+                if(usuario == null || usuario.isEmpty()){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setTitle(getString(R.string.titulo_dialog_info));
+                    dialog.setMessage(getString(R.string.mensaje_no_sesion));
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.create();
+                    dialog.show();
+                    break;
+                }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, Inicio.newInstance(position))
+                        .replace(R.id.container, ListaReproduccion.newInstance(position, usuario, token))
                         .commit();
                 break;
             case Constantes.HISTO_REPROD:
+                if(usuario == null || usuario.isEmpty()){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setTitle(getString(R.string.titulo_dialog_info));
+                    dialog.setMessage(getString(R.string.mensaje_no_sesion));
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.create();
+                    dialog.show();
+                    break;
+                }
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
             case Constantes.HISTO_DESCARGAS:
+                if(usuario == null || usuario.isEmpty()){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setTitle(getString(R.string.titulo_dialog_info));
+                    dialog.setMessage(getString(R.string.mensaje_no_sesion));
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.create();
+                    dialog.show();
+                    break;
+                }
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
             case Constantes.DESCARGAS:
+                if(usuario == null || usuario.isEmpty()){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setTitle(getString(R.string.titulo_dialog_info));
+                    dialog.setMessage(getString(R.string.mensaje_no_sesion));
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.create();
+                    dialog.show();
+                    break;
+                }
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, new Descargas().newInstance(position))
                         .commit();
                 break;
             case Constantes.CERRAR_SESION:
+                if(usuario == null || usuario.isEmpty()){
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setTitle(getString(R.string.titulo_dialog_info));
+                    dialog.setMessage(getString(R.string.mensaje_no_sesion));
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.create();
+                    dialog.show();
+                    break;
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(getString(R.string.cerrar_sesion))
                         .setTitle(getString(R.string.cerrar_sesion_titulo))
@@ -150,7 +239,7 @@ public class HomeActivity extends Activity
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();;
+                        .show();
                 break;
         }
     }
@@ -192,7 +281,6 @@ public class HomeActivity extends Activity
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
@@ -200,52 +288,30 @@ public class HomeActivity extends Activity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.home, menu);
-
-            // Associate searchable configuration with the SearchView
-            //SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-            //SearchView searchView = (SearchView) menu.findItem(R.id.action_busqueda)
-            //        .getActionView();
-            //searchView.setSearchableInfo(searchManager
-            //        .getSearchableInfo(getComponentName()));
-            //searchView.setSubmitButtonEnabled(true);
-            //searchView.setOnQueryTextListener(this);
             restoreActionBar();
+
+            MenuItem itemBusqueda = menu.findItem(R.id.action_busqueda);
+            MenuItem itemAgregar = menu.findItem(R.id.action_agregar);
+            switch (fragmentoSeleccionado) {
+                case Constantes.FAVORITOS:
+                    itemBusqueda.setVisible(false);
+                    break;
+                case Constantes.LISTA_REPROD:
+                    itemBusqueda.setVisible(false);
+                    itemAgregar.setVisible(true);
+                    break;
+                case Constantes.HISTO_REPROD:
+                    itemBusqueda.setVisible(false);
+                    break;
+                case Constantes.HISTO_DESCARGAS:
+                    itemBusqueda.setVisible(false);
+                    break;
+            }
 
             return true;
         }
         return super.onCreateOptionsMenu(menu);
     }
-
-    /*
-    @Override
-    public boolean onQueryTextChange(String newText)
-    {
-        return true;
-    }
-    @Override
-    public boolean onQueryTextSubmit(String query)
-    {
-        switch (seccionActiva) {
-            case Constantes.INICIO:
-
-                break;
-            case Constantes.FAVORITOS:
-
-                break;
-            case Constantes.LISTA_REPROD:
-
-                break;
-            case Constantes.HISTO_REPROD:
-
-                break;
-            case Constantes.DESCARGAS:
-
-                break;
-        }
-        Log.i("busqueda", query);
-        mostrarNotificacion(query);
-        return true;
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -20,14 +20,14 @@
         android:layout_width="fill_parent"
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/icon"
-        android:layout_height="13dp"
+        android:layout_height="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@id/icon"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="Duración"
-        android:textSize="10sp" />
+        android:textSize="11sp" />
 
     <TextView
         android:id="@+id/artista"

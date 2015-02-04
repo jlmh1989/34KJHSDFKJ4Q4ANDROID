@@ -1,4 +1,4 @@
-package com.rhcloud.app_nestmusic.nestmusic;
+package com.rhcloud.app_nestmusic.nestmusic.adaptadores;
 
 import android.app.Activity;
 import android.media.Image;
@@ -9,16 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.rhcloud.app_nestmusic.nestmusic.R;
+
 /**
  * Created by joseluis on 14/01/15.
  */
-public class ListaMenu extends ArrayAdapter<String> {
+public class ListaMenuAdapter extends ArrayAdapter<String> {
 
     private final Activity contexto;
     private final String[] texto;
     private final Integer[] imagenId;
 
-    public ListaMenu(Activity contexto, String[] texto, Integer[] imagenId){
+    public ListaMenuAdapter(Activity contexto, String[] texto, Integer[] imagenId){
         super(contexto, R.layout.lista_menu, texto);
         this.contexto = contexto;
         this.texto = texto;

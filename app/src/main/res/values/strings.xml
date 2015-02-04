@@ -57,6 +57,8 @@
     <string name="email_validacion_enviado">Correo de validación enviado.</string>
     <string name="email_recuperar_pass">Datos enviados al correo.</string>
     <string name="cargando">Cargando...</string>
+    <string name="guardando">Guardando...</string>
+    <string name="eliminando">Eliminando...</string>
     <string name="usuario_creado">"Usuario creado exitosamente."</string>
     <string name="titulo_dialog_info">Información</string>
     <string name="mensaje_registro">Usuario creado exitosamente. Se envió un enlace a su correo electrónico, por favor de validar su registro.</string>
@@ -65,10 +67,21 @@
     <string name="cerrar_sesion_titulo">Cerrar sesión</string>
     <string name="cerrar_app_titulo">Cerrar aplicación</string>
     <string name="icono_menu">Icono</string>
+    <string name="icono_recargar">Recargar</string>
     <string name="sin_coincidencias">No se encontrarón coincidencias.</string>
+    <string name="sin_favoritos">No tienes ninguna canción en favoritos, intente agregar alguno.</string>
+    <string name="sin_lista_reproduccion">No tienes ninguna lista de reproducción, intente crear uno.</string>
     <string name="artista_desconocido">Artista desconocido.</string>
     <string name="duracion_cancion">Duración:</string>
     <string name="desconocido">desconocido.</string>
+    <string name="mensaje_inicio">Empiece buscando...</string>
+    <string name="mensaje_no_sesion">Debe iniciar sesión para usar ésta función.</string>
+    <string name="fecha_creacion">Fecha de creación:</string>
+    <string name="titulo_nueva_lista_reprod">Nueva lista</string>
+    <string name="titulo_editar_lista_reprod">Editar lista</string>
+    <string name="mensaje_nueva_lista_reprod">Agregar lista de reproducción.</string>
+    <string name="mensaje_editar_lista_reprod">Editar nombre lista reproducción.</string>
+    <string name="seleccionado">seleccionado</string>
     <!-- Fin mensajes -->
 
 
@@ -86,6 +99,8 @@
     <string name="action_settings">Configurar</string>
     <string name="action_salir">Salir</string>
     <string name="action_busqueda">Busqueda</string>
+    <string name="action_eliminar">Eliminar</string>
+    <string name="action_editar">Editar</string>
     <!-- Fin -->
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

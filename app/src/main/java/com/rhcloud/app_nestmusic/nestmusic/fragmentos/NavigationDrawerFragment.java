@@ -1,4 +1,4 @@
-package com.rhcloud.app_nestmusic.nestmusic;
+package com.rhcloud.app_nestmusic.nestmusic.fragmentos;
 
 
 import android.app.Activity;
@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.rhcloud.app_nestmusic.nestmusic.R;
+import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMenuAdapter;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -106,7 +109,7 @@ public class NavigationDrawerFragment extends Fragment{
                 R.drawable.cerrar_sesion
         };
 
-        ListaMenu adapter = new ListaMenu(getActivity(), texto, imagenId);
+        ListaMenuAdapter adapter = new ListaMenuAdapter(getActivity(), texto, imagenId);
 
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);

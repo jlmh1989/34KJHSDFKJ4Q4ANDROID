@@ -9,6 +9,11 @@ import java.util.Random;
  */
 public class UtilPassword {
 
+    public static String encodeBase64(String cadena){
+        byte bytes[] = Base64.encode(cadena.getBytes(), 512);
+        return new String(bytes);
+    }
+
     /**
      * Codifica password a base64
      *
@@ -20,8 +25,7 @@ public class UtilPassword {
         String inicio = getLpad(4, (int) (ran.nextDouble() * 1000));
         String fin = getLpad(4, (int) (ran.nextDouble() * 1000));
         password = inicio + password + fin;
-        byte bytes[] = Base64.encode(password.getBytes(), 512);
-        return new String(bytes);
+        return encodeBase64(password);
     }
 
     /**

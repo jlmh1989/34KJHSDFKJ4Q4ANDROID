@@ -1,12 +1,14 @@
-package com.rhcloud.app_nestmusic.nestmusic;
+package com.rhcloud.app_nestmusic.nestmusic.fragmentos;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
+import com.rhcloud.app_nestmusic.nestmusic.R;
 
 
 /**

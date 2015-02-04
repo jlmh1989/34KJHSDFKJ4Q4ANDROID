@@ -1,10 +1,9 @@
-package com.rhcloud.app_nestmusic.nestmusic;
+package com.rhcloud.app_nestmusic.nestmusic.fragmentos;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,11 +14,16 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
+import com.rhcloud.app_nestmusic.nestmusic.R;
+import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapter;
+import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
 
@@ -31,12 +35,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by joseluis on 17/01/15.
@@ -48,11 +54,19 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
 
+    private int inicioBusqueda = 0;
     private ListView listaCancion;
     private ProgressBar cargando;
     private TextView mensajeBusqueda;
     private SearchView searchView;
-    private ListaMusica adapter;
+    private ListaMusicaAdapter adapterMusica;
+    private View footer;
+    private ArrayList<CancionBean> arrayCancion;
+    private String textoBusqueda = "";
+    private boolean busquedaNueva = true;
+    private ImageButton buscarMas;
+    private ProgressBar cargandoBuscarMas;
+    private TextView mensajeInicio;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -83,15 +97,35 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         listaCancion = (ListView) rootView.findViewById(R.id.listaCancion);
-        if(adapter != null){
-            listaCancion.setAdapter(adapter);
-        }
+        footer = ((LayoutInflater)this
+                .getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.lista_footer, null, false);
+
+        cargandoBuscarMas = (ProgressBar) footer.findViewById(R.id.pb_cargando_mas);
+        buscarMas = (ImageButton) footer.findViewById(R.id.buscar_mas);
+        buscarMas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inicioBusqueda += Constantes.LIMITE_CONSULTA;
+                busquedaNueva = false;
+                new RequestRest().execute(textoBusqueda, ""+inicioBusqueda, ""+Constantes.LIMITE_CONSULTA);
+            }
+        });
+
+        listaCancion.addFooterView(footer);
+        arrayCancion = new ArrayList<CancionBean>();
+        adapterMusica = new ListaMusicaAdapter(this.getActivity(), arrayCancion);
+        listaCancion.setAdapter(adapterMusica);
+
         listaCancion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //accion seleccion
             }
         });
+
+        mensajeInicio = (TextView) rootView.findViewById(R.id.mensajeInicio);
+        mensajeInicio.setVisibility(View.VISIBLE);
 
         cargando = (ProgressBar) rootView.findViewById(R.id.cargando);
         mensajeBusqueda = (TextView) rootView.findViewById(R.id.mensajeBusqueda);
@@ -130,7 +164,13 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     @Override
     public boolean onQueryTextSubmit(String query) {
         searchView.clearFocus();
-        new RequestRest().execute(query, ""+Constantes.LIMIT_RANDOM);
+        textoBusqueda = query;
+        arrayCancion.clear();
+        adapterMusica.limpiarLista();
+        busquedaNueva = true;
+        inicioBusqueda = 0;
+        mensajeInicio.setVisibility(View.GONE);
+        new RequestRest().execute(query, ""+inicioBusqueda, ""+Constantes.LIMITE_CONSULTA);
         return true;
     }
 
@@ -144,9 +184,14 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
 
         @Override
         protected void onPreExecute() {
-            mensajeBusqueda.setVisibility(View.GONE);
-            listaCancion.setVisibility(View.GONE);
-            cargando.setVisibility(View.VISIBLE);
+            if(busquedaNueva) {
+                mensajeBusqueda.setVisibility(View.GONE);
+                listaCancion.setVisibility(View.GONE);
+                cargando.setVisibility(View.VISIBLE);
+            }else{
+                cargandoBuscarMas.setVisibility(View.VISIBLE);
+                buscarMas.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -154,7 +199,8 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
             String url = Uri.parse(Constantes.BUSQUEDA_CANCION_ENDPOINT)
                     .buildUpon()
                     .appendQueryParameter("nombre", params[0])
-                    .appendQueryParameter("cantidad", params[1])
+                    .appendQueryParameter("inicio", params[1])
+                    .appendQueryParameter("cantidad", params[2])
                     .build().toString();
             HttpGet post = new HttpGet(url);
             HttpParams httpParams = new BasicHttpParams();
@@ -163,7 +209,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
             HttpClient httpClient = new DefaultHttpClient(httpParams);
             try {
                 HttpResponse response = httpClient.execute(post);
-                String respStr = EntityUtils.toString(response.getEntity());
+                String respStr = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
                 JSONObject respJSON = new JSONObject(respStr);
 
                 int estatus = respJSON.getInt("codigo");
@@ -175,31 +221,49 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
 
                     int tamArray = canciones.length();
 
+                    if(tamArray >= Constantes.LIMITE_CONSULTA){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                footer.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }else{
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                footer.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+
                     if(tamArray > 0) {
-
-                        final String[] titulo = new String[tamArray];
-                        final String[] artista = new String[tamArray];
-                        final String[] duracion = new String[tamArray];
-                        final Integer[] imagenId = new Integer[tamArray];
-
                         for (int i = 0; i < tamArray; i++) {
                             JSONObject cancion = canciones.getJSONObject(i);
-                            titulo[i] = cancion.getString("nombre");
-                            artista[i] = cancion.getString("artista") != "null" ? cancion.getString("artista") : getString(R.string.artista_desconocido);
-                            duracion[i] = getString(R.string.duracion_cancion) + " " + (cancion.getString("duracion") != "null" ? cancion.getString("duracion") : getString(R.string.desconocido));
-                            imagenId[i] = R.drawable.audio;
+                            CancionBean cancionBean = new CancionBean();
+                            cancionBean.setTitulo(cancion.getString("nombre"));
+                            cancionBean.setArtista(cancion.getString("artista") != "null" ? cancion.getString("artista") : getString(R.string.artista_desconocido));
+                            cancionBean.setDuracion(getString(R.string.duracion_cancion) + " " + (cancion.getString("duracion") != "null" ? cancion.getString("duracion") : getString(R.string.desconocido)));
+                            cancionBean.setImagenId(R.drawable.audio);
+                            adapterMusica.addCancion(cancionBean);
                         }
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                adapter = new ListaMusica(Inicio.this.getActivity(), imagenId, titulo, artista, duracion);
-                                listaCancion.setAdapter(adapter);
+                                adapterMusica.notifyDataSetChanged();
                             }
                         });
 
                     }else{
-                        mensajeBusqueda.setVisibility(View.VISIBLE);
+                        if(busquedaNueva) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mensajeBusqueda.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
                     }
 
                 }else{
@@ -242,8 +306,13 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
 
         @Override
         protected void onPostExecute(Integer result) {
-            listaCancion.setVisibility(View.VISIBLE);
-            cargando.setVisibility(View.GONE);
+            if(busquedaNueva) {
+                listaCancion.setVisibility(View.VISIBLE);
+                cargando.setVisibility(View.GONE);
+            }else {
+                cargandoBuscarMas.setVisibility(View.GONE);
+                buscarMas.setVisibility(View.VISIBLE);
+            }
         }
     }
 

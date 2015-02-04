@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="3dip">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="36dp"
+        android:text="Nombre Lista Reproduccion"
+        android:textSize="15sp"
+        android:id="@+id/nombreLista"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha creacion: 2015-01-01"
+        android:textSize="12sp"
+        android:id="@+id/fechaCreacion" />
+</LinearLayout>

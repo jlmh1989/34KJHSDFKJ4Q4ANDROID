@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="5dip">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:scaleType="fitXY"
+        android:id="@+id/buscar_mas"
+        android:src="@drawable/mas"
+        android:contentDescription="@string/icono_recargar"
+        android:background="#00ffffff" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:indeterminate="true"
+        android:id="@+id/pb_cargando_mas"
+        android:visibility="gone" />
+
+</LinearLayout>
