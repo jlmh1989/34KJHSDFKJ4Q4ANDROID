@@ -2,6 +2,7 @@ package com.rhcloud.app_nestmusic.nestmusic.fragmentos;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.net.Uri;
@@ -9,11 +10,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -34,6 +39,7 @@ import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -65,7 +71,9 @@ public class Favoritos extends Fragment implements SearchView.OnQueryTextListene
     private TextView mensajeFavoritos;
     private ListaMusicaAdapter adapterMusica;
     private ArrayList<CancionBean> arrayCancion;
+    private ArrayList<CancionBean> arrarCancionEliminar;
     private SearchView searchView;
+    private ProgressDialog progressDialog;
 
     public static Favoritos newInstance(int sectionNumber, String usuario, String token){
         Favoritos fragment = new Favoritos();
@@ -106,12 +114,60 @@ public class Favoritos extends Fragment implements SearchView.OnQueryTextListene
             }
         });
 
+        listaCancion.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listaCancion.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                final int contadorSeleccionado = listaCancion.getCheckedItemCount();
+                mode.setTitle(contadorSeleccionado + " " + getString(R.string.seleccionado));
+                adapterMusica.toggleSelection(position);
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.editar, menu);
+                MenuItem itemEditar = menu.findItem(R.id.action_editar);
+                itemEditar.setVisible(false);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_eliminar:
+                        SparseBooleanArray seleccionEliminar = adapterMusica.getItemsSeleccionados();
+                        arrarCancionEliminar = new ArrayList<CancionBean>();
+                        for (int i = (seleccionEliminar.size() - 1); i >= 0; i--){
+                            if(seleccionEliminar.valueAt(i)) {
+                                CancionBean cancionBean = adapterMusica.getItem(seleccionEliminar.keyAt(i));
+                                arrarCancionEliminar.add(cancionBean);
+                            }
+                        }
+                        new RequestDeleteRest().execute(getArguments().getString(Constantes.USUARIO), getArguments().getString(Constantes.TOKEN));
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                adapterMusica.removeSelection();
+            }
+        });
+
         cargando = (ProgressBar) rootView.findViewById(R.id.cargando);
         mensajeFavoritos = (TextView) rootView.findViewById(R.id.mensajeFavoritos);
 
         setHasOptionsMenu(true);
 
-        new RequestRest().execute(getArguments().getString(Constantes.USUARIO), getArguments().getString(Constantes.TOKEN));
+        new RequestConsultaRest().execute(getArguments().getString(Constantes.USUARIO), getArguments().getString(Constantes.TOKEN));
 
         return rootView;
     }
@@ -156,9 +212,9 @@ public class Favoritos extends Fragment implements SearchView.OnQueryTextListene
     }
 
     /**
-     * Clase auxiliar para invocar REST
+     * Clase auxiliar para invocar consulta REST
      */
-    private class RequestRest extends AsyncTask<String, Integer, Integer> {
+    private class RequestConsultaRest extends AsyncTask<String, Integer, Integer> {
 
         @Override
         protected void onPreExecute() {
@@ -194,6 +250,9 @@ public class Favoritos extends Fragment implements SearchView.OnQueryTextListene
                 final String mensaje = respJSON.getString("mensaje");
 
                 if(estatus == 200){
+                    arrayCancion.clear();
+                    adapterMusica.limpiarLista();
+
                     String entity = respJSON.getString("entity");
                     JSONArray canciones = new JSONArray(entity);
 
@@ -203,11 +262,11 @@ public class Favoritos extends Fragment implements SearchView.OnQueryTextListene
                         for (int i = 0; i < tamArray; i++) {
                             JSONObject cancion = canciones.getJSONObject(i);
                             CancionBean cancionBean = new CancionBean();
+                            cancionBean.setId(cancion.getInt("id"));
                             cancionBean.setTitulo(cancion.getString("nombre"));
                             cancionBean.setArtista(cancion.getString("artista") != "null" ? cancion.getString("artista") : getString(R.string.artista_desconocido));
                             cancionBean.setDuracion(getString(R.string.duracion_cancion) + " " + (cancion.getString("duracion") != "null" ? cancion.getString("duracion") : getString(R.string.desconocido)));
                             cancionBean.setImagenId(R.drawable.audio);
-                            arrayCancion.add(cancionBean);
                             adapterMusica.addCancion(cancionBean);
                         }
 
@@ -273,4 +332,101 @@ public class Favoritos extends Fragment implements SearchView.OnQueryTextListene
             cargando.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * Clase auxiliar para invocar eliimado REST
+     */
+    private class RequestDeleteRest extends AsyncTask<String, Integer, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.eliminando));
+                }
+            });
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+            final String authorization = "Basic " + UtilPassword.encodeBase64(params[0] + ":" + params[1]);
+            int status = 406;
+
+            for (CancionBean bean : arrarCancionEliminar){
+                String url = Uri.parse(Constantes.ELIMINAR_FAVORITOS_ENDPOINT)
+                        .buildUpon()
+                        .appendQueryParameter("idCancion", ""+bean.getId())
+                        .appendQueryParameter("usuario", params[0])
+                        .build().toString();
+                HttpPost post = new HttpPost(url);
+                HttpParams httpParams = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(httpParams, Constantes.CONEXION_TIMEOUT);
+                HttpConnectionParams.setSoTimeout(httpParams, Constantes.SOCKET_TIMEOUT);
+                DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+                httpClient.addRequestInterceptor(new HttpRequestInterceptor() {
+                    @Override
+                    public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
+                        httpRequest.addHeader(Constantes.AUTHORIZATION, authorization);
+                    }
+                });
+                try {
+                    HttpResponse response = httpClient.execute(post);
+                    String respStr = EntityUtils.toString(response.getEntity(), HTTP.UTF_8);
+                    JSONObject respJSON = new JSONObject(respStr);
+
+                    int estatus = respJSON.getInt("codigo");
+                    final String mensaje = respJSON.getString("mensaje");
+
+                    if(estatus != 200){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mostrarNotificacion(mensaje);
+                            }
+                        });
+                    }
+
+                    status = estatus;
+                }catch (ClientProtocolException e){
+                    Log.e("ClientProtocolException", e.getMessage(), e);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mostrarNotificacion(getString(R.string.error_conexion));
+                        }
+                    });
+                }catch (IOException e){
+                    Log.e("IOException", e.getMessage(), e);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mostrarNotificacion(getString(R.string.error_servidor));
+                        }
+                    });
+                }catch (JSONException e){
+                    Log.e("JSONException", e.getMessage(), e);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mostrarNotificacion(getString(R.string.error_datos));
+                        }
+                    });
+                }
+            }
+            return status;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            });
+            new RequestConsultaRest().execute(getArguments().getString(Constantes.USUARIO), getArguments().getString(Constantes.TOKEN));
+        }
+    }
+
 }

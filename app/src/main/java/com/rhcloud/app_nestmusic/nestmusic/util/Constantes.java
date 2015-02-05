@@ -27,6 +27,7 @@ public class Constantes {
     public static final String ALEATORIO_CANCION_ENDPOINT = SERVER + "/servicios/rest/busqueda/cancionesAleatorio?";
     public static final String BUSQUEDA_CANCION_ENDPOINT = SERVER + "/servicios/rest/busqueda/canciones?";
     public static final String OBTENER_FAVORITOS_ENDPOINT = SERVER + "/servicios/rest/favorito/obtener?";
+    public static final String ELIMINAR_FAVORITOS_ENDPOINT = SERVER + "/servicios/rest/favorito/eliminar?";
     public static final String OBTENER_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/obtenerListas?";
     public static final String AGREGAR_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/agregar?";
     public static final String ELIMINAR_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/eliminar?";

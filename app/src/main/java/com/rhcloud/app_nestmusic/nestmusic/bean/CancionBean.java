@@ -9,8 +9,10 @@ public class CancionBean {
     private String titulo;
     private String artista;
     private String duracion;
+    private int id;
 
-    public CancionBean(Integer imagenId, String titulo, String artista, String duracion) {
+    public CancionBean(int id, Integer imagenId, String titulo, String artista, String duracion) {
+        this.id = id;
         this.imagenId = imagenId;
         this.titulo = titulo;
         this.artista = artista;
@@ -19,6 +21,14 @@ public class CancionBean {
 
     public CancionBean(){
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setImagenId(Integer imagenId) {

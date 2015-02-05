@@ -146,7 +146,6 @@ public class ListaReproduccion extends Fragment {
                         for (int i = (seleccionEliminar.size() - 1); i >= 0; i--){
                             if(seleccionEliminar.valueAt(i)) {
                                 ListaReproduccionBean objetoEliminar = listaReprodAdapter.getItem(seleccionEliminar.keyAt(i));
-                                //Eliminar objetos
                                 listaReproduccionBeansEliminar.add(objetoEliminar);
                             }
                         }

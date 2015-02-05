@@ -1,6 +1,7 @@
 package com.rhcloud.app_nestmusic.nestmusic.adaptadores;
 
 import android.app.Activity;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.rhcloud.app_nestmusic.nestmusic.R;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by joseluis on 18/01/15.
@@ -20,9 +22,11 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
 
     private final Activity contexto;
     private ArrayList<CancionBean> listaCancion;
+    private SparseBooleanArray itemsSeleccionados;
 
     public ListaMusicaAdapter(Activity contexto, ArrayList<CancionBean> listaCancion){
         super(contexto, R.layout.lista_musica, listaCancion);
+        itemsSeleccionados = new SparseBooleanArray();
         this.contexto = contexto;
         this.listaCancion = listaCancion;
     }
@@ -34,6 +38,43 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
     public void addCancion(CancionBean cancion){
         this.listaCancion.add(cancion);
     }
+
+    @Override
+    public void remove(CancionBean object) {
+        listaCancion.remove(object);
+        notifyDataSetChanged();
+    }
+
+    public List<CancionBean> getListaCancion(){
+        return listaCancion;
+    }
+
+    public void toggleSelection(int posicion){
+        selectedView(posicion, !itemsSeleccionados.get(posicion));
+    }
+
+    public void removeSelection(){
+        itemsSeleccionados = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
+
+    public void selectedView(int posicion, boolean value){
+        if(value){
+            itemsSeleccionados.put(posicion, value);
+        }else {
+            itemsSeleccionados.delete(posicion);
+        }
+        notifyDataSetChanged();
+    }
+
+    public int getSelectedCount(){
+        return itemsSeleccionados.size();
+    }
+
+    public SparseBooleanArray getItemsSeleccionados(){
+        return itemsSeleccionados;
+    }
+
 
     @Override
     public View getView(int position, View view, ViewGroup parent){
