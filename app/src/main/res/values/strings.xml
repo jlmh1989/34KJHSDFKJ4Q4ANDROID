@@ -71,6 +71,8 @@
     <string name="sin_coincidencias">No se encontrarón coincidencias.</string>
     <string name="sin_favoritos">No tienes ninguna canción en favoritos, intente agregar alguno.</string>
     <string name="sin_lista_reproduccion">No tienes ninguna lista de reproducción, intente crear uno.</string>
+    <string name="sin_historial_reprod">No tienes ninguna canción en historial.</string>
+    <string name="filtro_favorito">Buscar en favoritos...</string>
     <string name="artista_desconocido">Artista desconocido.</string>
     <string name="duracion_cancion">Duración:</string>
     <string name="desconocido">desconocido.</string>

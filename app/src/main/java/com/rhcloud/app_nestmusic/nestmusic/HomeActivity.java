@@ -21,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import com.rhcloud.app_nestmusic.nestmusic.bd.SesionSQLiteHelper;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Descargas;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Favoritos;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.HistorialReproduccion;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Inicio;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.ListaReproduccion;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.NavigationDrawerFragment;
@@ -164,7 +165,7 @@ public class HomeActivity extends Activity
                     break;
                 }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, Inicio.newInstance(position))
+                        .replace(R.id.container, HistorialReproduccion.newInstance(position, usuario, token))
                         .commit();
                 break;
             case Constantes.HISTO_DESCARGAS:

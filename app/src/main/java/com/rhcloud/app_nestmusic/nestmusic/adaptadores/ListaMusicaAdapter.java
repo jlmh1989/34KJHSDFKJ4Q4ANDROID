@@ -1,6 +1,7 @@
 package com.rhcloud.app_nestmusic.nestmusic.adaptadores;
 
 import android.app.Activity;
+import android.inputmethodservice.Keyboard;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by joseluis on 18/01/15.
@@ -22,6 +24,7 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
 
     private final Activity contexto;
     private ArrayList<CancionBean> listaCancion;
+    private ArrayList<CancionBean> listaOriginal;
     private SparseBooleanArray itemsSeleccionados;
 
     public ListaMusicaAdapter(Activity contexto, ArrayList<CancionBean> listaCancion){
@@ -29,6 +32,8 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         itemsSeleccionados = new SparseBooleanArray();
         this.contexto = contexto;
         this.listaCancion = listaCancion;
+        this.listaOriginal = new ArrayList<CancionBean>();
+        this.listaOriginal.addAll(listaCancion);
     }
 
     public void limpiarLista(){
@@ -37,6 +42,7 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
 
     public void addCancion(CancionBean cancion){
         this.listaCancion.add(cancion);
+        this.listaOriginal.add(cancion);
     }
 
     @Override
@@ -75,6 +81,19 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         return itemsSeleccionados;
     }
 
+    public void filtrar(String texto){
+        listaCancion.clear();
+        if(texto.trim().length() == 0){
+            listaCancion.addAll(listaOriginal);
+        }else {
+            for (CancionBean cancionBean : listaOriginal){
+                if (cancionBean.getTitulo().toLowerCase(Locale.getDefault()).contains(texto)){
+                    listaCancion.add(cancionBean);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 
     @Override
     public View getView(int position, View view, ViewGroup parent){

@@ -32,6 +32,7 @@ public class Constantes {
     public static final String AGREGAR_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/agregar?";
     public static final String ELIMINAR_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/eliminar?";
     public static final String EDITAR_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/actualizar?";
+    public static final String HISTORIAL_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/historialReproduccion/obtener?";
 
     public static final int INICIO = 0;
     public static final int FAVORITOS = 1;

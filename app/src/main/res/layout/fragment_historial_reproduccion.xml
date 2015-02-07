@@ -3,12 +3,12 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.rhcloud.app_nestmusic.nestmusic.fragmentos.ListaReproduccion">
+    tools:context="com.rhcloud.app_nestmusic.nestmusic.fragmentos.HistorialReproduccion">
 
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/listaReproduccion"
+        android:id="@+id/listaCancion"
         android:choiceMode="singleChoice"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -31,8 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/sin_lista_reproduccion"
-        android:id="@+id/mensajeListaReproduccion"
+        android:text="@string/sin_historial_reprod"
+        android:id="@+id/mensajeHistorialReprod"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
