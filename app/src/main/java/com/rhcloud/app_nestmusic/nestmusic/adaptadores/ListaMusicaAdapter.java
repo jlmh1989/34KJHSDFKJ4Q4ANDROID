@@ -1,7 +1,6 @@
 package com.rhcloud.app_nestmusic.nestmusic.adaptadores;
 
 import android.app.Activity;
-import android.inputmethodservice.Keyboard;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,11 +82,11 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
 
     public void filtrar(String texto){
         listaCancion.clear();
-        if(texto.trim().length() == 0){
+        if (texto.trim().length() == 0) {
             listaCancion.addAll(listaOriginal);
-        }else {
-            for (CancionBean cancionBean : listaOriginal){
-                if (cancionBean.getTitulo().toLowerCase(Locale.getDefault()).contains(texto)){
+        } else {
+            for (CancionBean cancionBean : listaOriginal) {
+                if (cancionBean.getTitulo().toLowerCase(Locale.getDefault()).contains(texto)) {
                     listaCancion.add(cancionBean);
                 }
             }
@@ -107,7 +106,6 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
 
         CancionBean cancion = this.listaCancion.get(position);
 
-        icono.setImageResource(cancion.getImagenId());
         titulo.setText(cancion.getTitulo());
         artista.setText(cancion.getArtista());
         duracion.setText(cancion.getDuracion());

@@ -177,7 +177,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     @Override
     public boolean onQueryTextChange(String newText) {
 
-        return true;
+        return false;
     }
 
     private class RequestRest extends AsyncTask<String, Integer, Integer> {

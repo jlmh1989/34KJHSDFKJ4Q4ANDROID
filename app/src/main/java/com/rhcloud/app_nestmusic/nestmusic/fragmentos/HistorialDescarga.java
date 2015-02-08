@@ -2,7 +2,6 @@ package com.rhcloud.app_nestmusic.nestmusic.fragmentos;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,17 +47,18 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HistorialReproduccion extends Fragment {
+public class HistorialDescarga extends Fragment {
+
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listaCancion;
     private ProgressBar cargando;
-    private TextView mensajeHistorialRep;
+    private TextView mensajeHistorialDescarga;
     private ListaMusicaAdapter adapterMusica;
     private ArrayList<CancionBean> arrayCancion;
 
-    public static HistorialReproduccion newInstance(int sectionNumber, String usuario, String token){
-        HistorialReproduccion fragment = new HistorialReproduccion();
+    public static HistorialDescarga newInstance(int sectionNumber, String usuario, String token){
+        HistorialDescarga fragment = new HistorialDescarga();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         args.putString(Constantes.USUARIO, usuario);
@@ -67,7 +67,7 @@ public class HistorialReproduccion extends Fragment {
         return fragment;
     }
 
-    public HistorialReproduccion() {
+    public HistorialDescarga() {
         // Required empty public constructor
     }
 
@@ -83,7 +83,7 @@ public class HistorialReproduccion extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_historial_reproduccion, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_historial_descarga, container, false);
 
         arrayCancion = new ArrayList<CancionBean>();
         adapterMusica = new ListaMusicaAdapter(this.getActivity(), arrayCancion);
@@ -98,7 +98,7 @@ public class HistorialReproduccion extends Fragment {
         });
 
         cargando = (ProgressBar) rootView.findViewById(R.id.cargando);
-        mensajeHistorialRep = (TextView) rootView.findViewById(R.id.mensajeHistorialReprod);
+        mensajeHistorialDescarga = (TextView) rootView.findViewById(R.id.mensajeHistorialDescarga);
 
         setHasOptionsMenu(true);
 
@@ -128,13 +128,13 @@ public class HistorialReproduccion extends Fragment {
         protected void onPreExecute() {
             cargando.setVisibility(View.VISIBLE);
             listaCancion.setVisibility(View.GONE);
-            mensajeHistorialRep.setVisibility(View.GONE);
+            mensajeHistorialDescarga.setVisibility(View.GONE);
         }
 
         @Override
         protected Integer doInBackground(String... params) {
             final String authorization = "Basic " + UtilPassword.encodeBase64(params[0] + ":" + params[1]);
-            String url = Uri.parse(Constantes.HISTORIAL_REPRODUCCION_ENDPOINT)
+            String url = Uri.parse(Constantes.HISTORIAL_DESCARGA_ENDPOINT)
                     .buildUpon()
                     .appendQueryParameter("usuario", params[0])
                     .build().toString();
@@ -162,13 +162,14 @@ public class HistorialReproduccion extends Fragment {
                     adapterMusica.limpiarLista();
 
                     String entity = respJSON.getString("entity");
-                    JSONArray canciones = new JSONArray(entity);
+                    JSONArray descargas = new JSONArray(entity);
 
-                    int tamArray = canciones.length();
+                    int tamArray = descargas.length();
 
                     if(tamArray > 0) {
                         for (int i = 0; i < tamArray; i++) {
-                            JSONObject cancion = canciones.getJSONObject(i);
+                            JSONObject descarga = descargas.getJSONObject(i);
+                            JSONObject cancion = descarga.getJSONObject("cancion");
                             CancionBean cancionBean = new CancionBean();
                             cancionBean.setId(cancion.getInt("id"));
                             cancionBean.setTitulo(cancion.getString("nombre"));
@@ -183,7 +184,7 @@ public class HistorialReproduccion extends Fragment {
                             public void run() {
                                 cargando.setVisibility(View.GONE);
                                 listaCancion.setVisibility(View.VISIBLE);
-                                mensajeHistorialRep.setVisibility(View.GONE);
+                                mensajeHistorialDescarga.setVisibility(View.GONE);
                                 adapterMusica.notifyDataSetChanged();
                             }
                         });
@@ -192,7 +193,7 @@ public class HistorialReproduccion extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mensajeHistorialRep.setVisibility(View.VISIBLE);
+                                mensajeHistorialDescarga.setVisibility(View.VISIBLE);
                             }
                         });
                     }

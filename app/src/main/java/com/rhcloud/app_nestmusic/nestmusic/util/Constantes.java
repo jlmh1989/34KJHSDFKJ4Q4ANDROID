@@ -33,14 +33,16 @@ public class Constantes {
     public static final String ELIMINAR_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/eliminar?";
     public static final String EDITAR_LISTA_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/listaReproduccion/actualizar?";
     public static final String HISTORIAL_REPRODUCCION_ENDPOINT = SERVER + "/servicios/rest/historialReproduccion/obtener?";
+    public static final String HISTORIAL_DESCARGA_ENDPOINT = SERVER + "/servicios/rest/descarga/obtener?";
 
     public static final int INICIO = 0;
-    public static final int FAVORITOS = 1;
-    public static final int LISTA_REPROD = 2;
-    public static final int HISTO_REPROD = 3;
-    public static final int HISTO_DESCARGAS = 4;
-    public static final int DESCARGAS = 5;
-    public static final int CERRAR_SESION = 6;
+    public static final int MI_MUSICA = 1;
+    public static final int FAVORITOS = 2;
+    public static final int LISTA_REPROD = 3;
+    public static final int HISTO_REPROD = 4;
+    public static final int HISTO_DESCARGAS = 5;
+    public static final int DESCARGAS = 6;
+    public static final int CERRAR_SESION = 7;
 
     public static final int LIMITE_CONSULTA = 20;
 

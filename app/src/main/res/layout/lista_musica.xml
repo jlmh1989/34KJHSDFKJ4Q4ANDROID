@@ -7,12 +7,10 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
+        android:layout_width="?android:attr/listPreferredItemHeight"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
-        android:paddingRight="6dp"
-        android:paddingEnd="6dp"
         android:contentDescription="@string/icono_menu"
         android:src="@drawable/audio" />
 

@@ -265,6 +265,7 @@ public class Favoritos extends Fragment{
                             @Override
                             public void run() {
                                 cargando.setVisibility(View.GONE);
+                                filtro.setVisibility(View.VISIBLE);
                                 listaCancion.setVisibility(View.VISIBLE);
                                 mensajeFavoritos.setVisibility(View.GONE);
                                 adapterMusica.notifyDataSetChanged();

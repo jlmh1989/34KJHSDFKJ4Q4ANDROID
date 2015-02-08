@@ -72,7 +72,9 @@
     <string name="sin_favoritos">No tienes ninguna canción en favoritos, intente agregar alguno.</string>
     <string name="sin_lista_reproduccion">No tienes ninguna lista de reproducción, intente crear uno.</string>
     <string name="sin_historial_reprod">No tienes ninguna canción en historial.</string>
+    <string name="sin_historial_descarga">No tienes historial de descarga.</string>
     <string name="filtro_favorito">Buscar en favoritos...</string>
+    <string name="filtro_mi_musica">Buscar en mi música...</string>
     <string name="artista_desconocido">Artista desconocido.</string>
     <string name="duracion_cancion">Duración:</string>
     <string name="desconocido">desconocido.</string>
@@ -84,11 +86,13 @@
     <string name="mensaje_nueva_lista_reprod">Agregar lista de reproducción.</string>
     <string name="mensaje_editar_lista_reprod">Editar nombre lista reproducción.</string>
     <string name="seleccionado">seleccionado</string>
+    <string name="error_leer_sd_externo">Error al obtener lista de música en EXTERNAL SD CARD.</string>
     <!-- Fin mensajes -->
 
 
     <!-- Elementos del menu lateral -->
     <string name="menu_inicio">Inicio</string>
+    <string name="menu_mi_musica">Mi Música</string>
     <string name="menu_favoritos">Favoritos</string>
     <string name="menu_lista_Rep">Lista reproducción</string>
     <string name="menu_historial_Rep">Historial reproducción</string>

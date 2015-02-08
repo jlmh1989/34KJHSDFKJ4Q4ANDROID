@@ -91,6 +91,7 @@ public class NavigationDrawerFragment extends Fragment{
 
         String[] texto = {
                 getString(R.string.menu_inicio),
+                getString(R.string.menu_mi_musica),
                 getString(R.string.menu_favoritos),
                 getString(R.string.menu_lista_Rep),
                 getString(R.string.menu_historial_Rep),
@@ -101,6 +102,7 @@ public class NavigationDrawerFragment extends Fragment{
 
         Integer[] imagenId = {
                 R.drawable.inicio,
+                R.drawable.audio,
                 R.drawable.favoritos,
                 R.drawable.lista_rep,
                 R.drawable.historial_rep,

@@ -21,9 +21,11 @@ import android.support.v4.widget.DrawerLayout;
 import com.rhcloud.app_nestmusic.nestmusic.bd.SesionSQLiteHelper;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Descargas;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Favoritos;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.HistorialDescarga;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.HistorialReproduccion;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Inicio;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.ListaReproduccion;
+import com.rhcloud.app_nestmusic.nestmusic.fragmentos.MiMusica;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.NavigationDrawerFragment;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
@@ -111,6 +113,11 @@ public class HomeActivity extends Activity
                         .replace(R.id.container, Inicio.newInstance(position))
                         .commit();
                 break;
+            case Constantes.MI_MUSICA:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, MiMusica.newInstance(position))
+                        .commit();
+                break;
             case Constantes.FAVORITOS:
                 if(usuario == null || usuario.isEmpty()){
                         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -184,8 +191,8 @@ public class HomeActivity extends Activity
                     break;
                 }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, Inicio.newInstance(position))
-                        .commit();
+                        .replace(R.id.container, HistorialDescarga.newInstance(position, usuario, token))
+                                .commit();
                 break;
             case Constantes.DESCARGAS:
                 if(usuario == null || usuario.isEmpty()){
@@ -254,6 +261,9 @@ public class HomeActivity extends Activity
             case Constantes.INICIO:
                 mTitle = getString(R.string.menu_inicio);
                 break;
+            case Constantes.MI_MUSICA:
+                mTitle = getString(R.string.menu_mi_musica);
+                break;
             case Constantes.FAVORITOS:
                 mTitle = getString(R.string.menu_favoritos);
                 break;
@@ -294,6 +304,9 @@ public class HomeActivity extends Activity
             MenuItem itemBusqueda = menu.findItem(R.id.action_busqueda);
             MenuItem itemAgregar = menu.findItem(R.id.action_agregar);
             switch (fragmentoSeleccionado) {
+                case Constantes.MI_MUSICA:
+                    itemBusqueda.setVisible(false);
+                    break;
                 case Constantes.FAVORITOS:
                     itemBusqueda.setVisible(false);
                     break;
@@ -358,7 +371,7 @@ public class HomeActivity extends Activity
 
     /**
      * Monstrar mensaje toast
-     * @param mensaje
+     * @param mensaje Mensaje a mostrar
      */
     private void mostrarNotificacion(String mensaje){
         Utils.mostrarNotificacion(this, mensaje);
@@ -397,14 +410,11 @@ public class HomeActivity extends Activity
                 final String mensaje = respJSON.getString("mensaje");
 
                 if(estatus == 200){
-                    JSONObject entity = new JSONObject(respJSON.getString("entity"));
-                    String token = entity.getString("token");
-
                     SesionSQLiteHelper sesionSQLiteHelper = new SesionSQLiteHelper(HomeActivity.this, Constantes.BASE_DATOS_NOMBRE, null, 1);
                     SQLiteDatabase db = sesionSQLiteHelper.getWritableDatabase();
 
                     if(db != null){
-                        db.delete(Constantes.NOMBRE_TABLA_SESION, "USUARIO=?", new String[]{usuario});
+                        db.delete(Constantes.NOMBRE_TABLA_SESION, null, null);
                         db.close();
                         //Cerrar app
                         finish();
