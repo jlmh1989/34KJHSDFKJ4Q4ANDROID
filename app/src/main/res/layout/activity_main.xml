@@ -82,7 +82,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:textSize="9dp"
+        android:textSize="9sp"
         android:layout_marginTop="15dp"
         android:onClick="solicitarValidacionOnClick"/>
 

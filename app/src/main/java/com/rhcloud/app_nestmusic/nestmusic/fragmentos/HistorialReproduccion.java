@@ -2,7 +2,6 @@ package com.rhcloud.app_nestmusic.nestmusic.fragmentos;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;

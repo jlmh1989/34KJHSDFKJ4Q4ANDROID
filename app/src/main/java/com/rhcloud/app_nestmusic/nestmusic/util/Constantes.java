@@ -17,7 +17,7 @@ public class Constantes {
     public static final int CONEXION_TIMEOUT = 25000;
     public static final int SOCKET_TIMEOUT = 25000;
 
-    public static final String SERVER = "http://servicios-jlmh1989.rhcloud.com";//"http://10.0.2.2:8080/servicios";
+    private static final String SERVER = "http://servicios-jlmh1989.rhcloud.com";//"http://10.0.2.2:8080/servicios";
 
     public static final String INGRESO_ENDPOINT = SERVER + "/servicios/rest/usuario/login?";
     public static final String REGISTRO_ENDPOINT = SERVER + "/servicios/rest/usuario/registro?";

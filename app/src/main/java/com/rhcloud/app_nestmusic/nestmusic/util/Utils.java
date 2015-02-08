@@ -3,7 +3,6 @@ package com.rhcloud.app_nestmusic.nestmusic.util;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.widget.Toast;
 
 /**

@@ -45,7 +45,6 @@ public class MiMusica extends Fragment{
     private ListView listaCancionView;
     private ProgressBar cargando;
     private EditText filtro;
-    private ArrayList<MusicaHDBean> listaMusica;
     private ListaMusicaHDAdapter listaMusicaAdapter;
 
     public static MiMusica newInstance(int sectionNumber){
@@ -74,7 +73,7 @@ public class MiMusica extends Fragment{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_mi_musica, container, false);
 
-        listaMusica = new ArrayList<MusicaHDBean>();
+        ArrayList<MusicaHDBean> listaMusica = new ArrayList<MusicaHDBean>();
         listaMusicaAdapter = new ListaMusicaHDAdapter(this.getActivity(), listaMusica);
 
         filtro = (EditText) rootView.findViewById(R.id.filtro);
@@ -113,7 +112,7 @@ public class MiMusica extends Fragment{
         return rootView;
     }
 
-    public void leerMusicaSDCARD(){
+    void leerMusicaSDCARD(){
         ContentResolver musicaResolver = getActivity().getContentResolver();
         Uri musicaUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] select = {

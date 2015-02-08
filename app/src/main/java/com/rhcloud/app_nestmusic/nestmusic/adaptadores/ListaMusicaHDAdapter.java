@@ -1,7 +1,6 @@
 package com.rhcloud.app_nestmusic.nestmusic.adaptadores;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- * Created by joseluis on 07/02/15.
+ * Created by Jose Luis Martinez on 07/02/15.
  */
 public class ListaMusicaHDAdapter extends BaseAdapter{
 

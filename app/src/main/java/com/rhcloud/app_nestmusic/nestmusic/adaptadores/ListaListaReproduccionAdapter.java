@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by joseluis on 02/02/15.
+ * Created by Jose Luis Martinez on 02/02/15.
  */
 public class ListaListaReproduccionAdapter extends ArrayAdapter<ListaReproduccionBean> {
 
@@ -58,7 +58,7 @@ public class ListaListaReproduccionAdapter extends ArrayAdapter<ListaReproduccio
         notifyDataSetChanged();
     }
 
-    public void selectedView(int posicion, boolean value){
+    void selectedView(int posicion, boolean value){
         if(value){
             itemsSeleccionados.put(posicion, value);
         }else {

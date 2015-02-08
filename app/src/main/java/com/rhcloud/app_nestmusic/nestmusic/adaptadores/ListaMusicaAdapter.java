@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by joseluis on 18/01/15.
+ * Created by Jose Luis Martinez on 18/01/15.
  */
 public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
 
@@ -63,7 +63,7 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         notifyDataSetChanged();
     }
 
-    public void selectedView(int posicion, boolean value){
+    void selectedView(int posicion, boolean value){
         if(value){
             itemsSeleccionados.put(posicion, value);
         }else {
@@ -99,7 +99,6 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         LayoutInflater inflater = contexto.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.lista_musica, parent, false);
 
-        ImageView icono = (ImageView) rowView.findViewById(R.id.icon);
         TextView titulo = (TextView) rowView.findViewById(R.id.titulo);
         TextView artista = (TextView) rowView.findViewById(R.id.artista);
         TextView duracion = (TextView) rowView.findViewById(R.id.duracion);

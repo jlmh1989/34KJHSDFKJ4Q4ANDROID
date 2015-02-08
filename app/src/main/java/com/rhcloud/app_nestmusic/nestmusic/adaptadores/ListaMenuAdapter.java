@@ -1,7 +1,6 @@
 package com.rhcloud.app_nestmusic.nestmusic.adaptadores;
 
 import android.app.Activity;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import com.rhcloud.app_nestmusic.nestmusic.R;
 
 /**
- * Created by joseluis on 14/01/15.
+ * Created by Jose Luis Martinez on 14/01/15.
  */
 public class ListaMenuAdapter extends ArrayAdapter<String> {
 

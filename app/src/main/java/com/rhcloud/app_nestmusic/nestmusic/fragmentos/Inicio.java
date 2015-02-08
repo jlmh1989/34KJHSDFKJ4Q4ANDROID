@@ -242,8 +242,8 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                             JSONObject cancion = canciones.getJSONObject(i);
                             CancionBean cancionBean = new CancionBean();
                             cancionBean.setTitulo(cancion.getString("nombre"));
-                            cancionBean.setArtista(cancion.getString("artista") != "null" ? cancion.getString("artista") : getString(R.string.artista_desconocido));
-                            cancionBean.setDuracion(getString(R.string.duracion_cancion) + " " + (cancion.getString("duracion") != "null" ? cancion.getString("duracion") : getString(R.string.desconocido)));
+                            cancionBean.setArtista(!cancion.getString("artista").equals("null") ? cancion.getString("artista") : getString(R.string.artista_desconocido));
+                            cancionBean.setDuracion(getString(R.string.duracion_cancion) + " " + (!cancion.getString("duracion").equals("null") ? cancion.getString("duracion") : getString(R.string.desconocido)));
                             cancionBean.setImagenId(R.drawable.audio);
                             adapterMusica.addCancion(cancionBean);
                         }
