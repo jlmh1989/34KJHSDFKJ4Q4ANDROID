@@ -15,6 +15,7 @@ import android.app.Fragment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import android.widget.ProgressBar;
 import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
 import com.rhcloud.app_nestmusic.nestmusic.R;
 import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaHDAdapter;
-import com.rhcloud.app_nestmusic.nestmusic.bean.MusicaHDBean;
+import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
 
 import java.text.DateFormat;
@@ -46,6 +47,7 @@ public class MiMusica extends Fragment{
     private ProgressBar cargando;
     private EditText filtro;
     private ListaMusicaHDAdapter listaMusicaAdapter;
+    private MiMusicaCallbacks listener;
 
     public static MiMusica newInstance(int sectionNumber){
         MiMusica fragment = new MiMusica();
@@ -73,7 +75,7 @@ public class MiMusica extends Fragment{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_mi_musica, container, false);
 
-        ArrayList<MusicaHDBean> listaMusica = new ArrayList<MusicaHDBean>();
+        ArrayList<CancionBean> listaMusica = new ArrayList<CancionBean>();
         listaMusicaAdapter = new ListaMusicaHDAdapter(this.getActivity(), listaMusica);
 
         filtro = (EditText) rootView.findViewById(R.id.filtro);
@@ -100,12 +102,15 @@ public class MiMusica extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //accion seleccion
+                listener.setPosicionMusicaReproducir(position);
             }
         });
 
         cargando = (ProgressBar) rootView.findViewById(R.id.cargando);
 
         setHasOptionsMenu(true);
+
+        listener.setTituloActivityMiMusica(getString(R.string.menu_mi_musica));
 
         new ObtenerListaMusica().execute((Void)null);
 
@@ -136,7 +141,7 @@ public class MiMusica extends Fragment{
             int albumIdColumna = musicaCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID);
 
             do {
-                MusicaHDBean musica = new MusicaHDBean();
+                CancionBean musica = new CancionBean();
                 musica.setId(musicaCursor.getLong(idColumna));
                 musica.setTitulo(musicaCursor.getString(tituloColumna));
                 musica.setArtista(musicaCursor.getString(artistaColumna));
@@ -166,6 +171,7 @@ public class MiMusica extends Fragment{
                     listaCancionView.setVisibility(View.VISIBLE);
                     filtro.setVisibility(View.VISIBLE);
                     listaMusicaAdapter.notifyDataSetChanged();
+                    listener.setListaCancionesMiMusica(listaMusicaAdapter.getListaMusica());
                 }
             });
             musicaCursor.close();
@@ -175,12 +181,31 @@ public class MiMusica extends Fragment{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        try{
+            listener = (MiMusicaCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity no implementa iterface.");
+        }
+        /*
         ((HomeActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
+         */
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     private void mostrarNotificacion(String mensaje){
         Utils.mostrarNotificacion(getActivity(), mensaje);
+    }
+
+    public static interface MiMusicaCallbacks{
+        void setListaCancionesMiMusica(ArrayList<CancionBean> canciones);
+        void setTituloActivityMiMusica(String titulo);
+        void setPosicionMusicaReproducir(int posicion);
     }
 
     private class ObtenerListaMusica extends AsyncTask<Void, Void, Boolean>{

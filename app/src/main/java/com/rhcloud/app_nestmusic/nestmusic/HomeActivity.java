@@ -6,19 +6,26 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.MediaController;
 
 import com.rhcloud.app_nestmusic.nestmusic.bd.SesionSQLiteHelper;
+import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Descargas;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Favoritos;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.HistorialDescarga;
@@ -27,6 +34,8 @@ import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Inicio;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.ListaReproduccion;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.MiMusica;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.NavigationDrawerFragment;
+import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaController;
+import com.rhcloud.app_nestmusic.nestmusic.servicio.MusicaService;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
 
@@ -43,10 +52,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class HomeActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        MediaController.MediaPlayerControl,
+        MiMusica.MiMusicaCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -56,6 +68,14 @@ public class HomeActivity extends Activity
     private int fragmentoSeleccionado;
     private String usuario;
     private String token;
+
+    private ArrayList<CancionBean> canciones = new ArrayList<CancionBean>();
+    private MusicaController musicaController;
+    private MusicaService musicSrv;
+    private Intent playIntent;
+    private boolean musicBound=false;
+    private boolean paused=false;
+    private  boolean playbackPaused=false;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -80,6 +100,8 @@ public class HomeActivity extends Activity
         Intent intent = getIntent();
         usuario = intent.getStringExtra(Constantes.USUARIO);
         token = intent.getStringExtra(Constantes.TOKEN);
+
+        setMusicaController();
     }
 
     /**
@@ -376,6 +398,190 @@ public class HomeActivity extends Activity
     private void mostrarNotificacion(String mensaje){
         Utils.mostrarNotificacion(this, mensaje);
     }
+
+    private void setMusicaController(){
+        musicaController = new MusicaController(this);
+        musicaController.setPrevNextListeners(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playNext();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPrev();
+            }
+        });
+
+        musicaController.setMediaPlayer(this);
+        musicaController.setAnchorView(findViewById(R.id.container));
+        musicaController.setEnabled(true);
+    }
+
+    @Override
+    protected void onStart() {
+        Log.w("onStar()", "Ejecutado");
+        super.onStart();
+        if(playIntent==null){
+            Log.w("playIntent", "Creado intent");
+            //connect to the service
+            ServiceConnection musicConnection = new ServiceConnection(){
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    MusicaService.MusicaBinder binder = (MusicaService.MusicaBinder)service;
+                    musicSrv = binder.getService();
+                    musicSrv.setListaCaciones(canciones);
+                    musicBound = true;
+                    Log.w("MusicaConexion cantidad objeto", ""+canciones.size());
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    musicBound = false;
+                }
+            };
+            playIntent = new Intent(this, MusicaService.class);
+            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+            startService(playIntent);
+        }
+    }
+
+    @Override
+    public void start() {
+        musicSrv.go();
+    }
+
+    @Override
+    public void pause() {
+        playbackPaused=true;
+        musicSrv.pausePlayer();
+    }
+
+    @Override
+    public int getDuration() {
+        if(musicSrv!=null && musicBound && musicSrv.isPng())
+            return musicSrv.getDur();
+        else
+            return 0;
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        if(musicSrv!=null && musicBound && musicSrv.isPng())
+            return musicSrv.getPosn();
+        else
+            return 0;
+    }
+
+    @Override
+    public void seekTo(int pos) {
+        musicSrv.seek(pos);
+    }
+
+    @Override
+    public boolean isPlaying() {
+        if(musicSrv!=null && musicBound)
+            return musicSrv.isPng();
+        else
+            return false;
+    }
+
+    @Override
+    public int getBufferPercentage() {
+        return 0;
+    }
+
+    @Override
+    public boolean canPause() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeekBackward() {
+        return true;
+    }
+
+    @Override
+    public boolean canSeekForward() {
+        return true;
+    }
+
+    @Override
+    public int getAudioSessionId() {
+        return 0;
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        paused=true;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(paused){
+            setMusicaController();
+            paused=false;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        musicaController.hide();
+        super.onStop();
+    }
+
+    //play next
+    private void playNext(){
+        musicSrv.playNext();
+        if(playbackPaused){
+            setMusicaController();
+            playbackPaused=false;
+        }
+        musicaController.show(0);
+    }
+
+    //play previous
+    private void playPrev(){
+        musicSrv.playPrev();
+        if(playbackPaused){
+            setMusicaController();
+            playbackPaused=false;
+        }
+        musicaController.show(0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(playIntent);
+        musicSrv=null;
+        super.onDestroy();
+    }
+
+    @Override
+    public void setListaCancionesMiMusica(ArrayList<CancionBean> canciones) {
+        this.canciones.addAll(canciones);
+    }
+
+    @Override
+    public void setTituloActivityMiMusica(String titulo) {
+        mTitle = titulo;
+    }
+
+    @Override
+    public void setPosicionMusicaReproducir(int posicion) {
+        if(musicSrv != null) {
+            musicSrv.setCancion(posicion);
+            musicSrv.playSong();
+            if(playbackPaused){
+                setMusicaController();
+                playbackPaused=false;
+            }
+            musicaController.show(0);
+        }
+    }
+
 
     /**
      * Clase para manejar el request al servicio REST

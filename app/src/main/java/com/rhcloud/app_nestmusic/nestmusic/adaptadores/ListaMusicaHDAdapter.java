@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rhcloud.app_nestmusic.nestmusic.R;
-import com.rhcloud.app_nestmusic.nestmusic.bean.MusicaHDBean;
+import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -20,18 +20,18 @@ import java.util.Locale;
  */
 public class ListaMusicaHDAdapter extends BaseAdapter{
 
-    private ArrayList<MusicaHDBean> arrayMusica;
-    private ArrayList<MusicaHDBean> arrayMusicaOrginal;
+    private ArrayList<CancionBean> arrayMusica;
+    private ArrayList<CancionBean> arrayMusicaOrginal;
     private LayoutInflater musicaInf;
 
-    public ListaMusicaHDAdapter(Context c, ArrayList<MusicaHDBean> arrayMusica){
+    public ListaMusicaHDAdapter(Context c, ArrayList<CancionBean> arrayMusica){
         this.arrayMusica = arrayMusica;
-        arrayMusicaOrginal = new ArrayList<MusicaHDBean>();
+        arrayMusicaOrginal = new ArrayList<CancionBean>();
         arrayMusicaOrginal.addAll(arrayMusica);
         musicaInf = LayoutInflater.from(c);
     }
 
-    public void addMusica(MusicaHDBean cancion){
+    public void addMusica(CancionBean cancion){
         this.arrayMusica.add(cancion);
         this.arrayMusicaOrginal.add(cancion);
     }
@@ -41,7 +41,7 @@ public class ListaMusicaHDAdapter extends BaseAdapter{
         if (texto.trim().length() == 0) {
             arrayMusica.addAll(arrayMusicaOrginal);
         } else {
-            for (MusicaHDBean cancionBean : arrayMusicaOrginal) {
+            for (CancionBean cancionBean : arrayMusicaOrginal) {
                 if (cancionBean.getTitulo().toLowerCase(Locale.getDefault()).contains(texto)) {
                     arrayMusica.add(cancionBean);
                 }
@@ -50,14 +50,18 @@ public class ListaMusicaHDAdapter extends BaseAdapter{
         notifyDataSetChanged();
     }
 
+    public ArrayList<CancionBean> getListaMusica(){
+        return this.arrayMusica;
+    }
+
     @Override
     public int getCount() {
         return arrayMusica.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public CancionBean getItem(int position) {
+        return arrayMusica.get(position);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class ListaMusicaHDAdapter extends BaseAdapter{
         TextView artista = (TextView) musicaLayout.findViewById(R.id.artista);
         TextView duracion = (TextView) musicaLayout.findViewById(R.id.duracion);
 
-        final MusicaHDBean musica = arrayMusica.get(position);
+        final CancionBean musica = arrayMusica.get(position);
 
         if(musica.getImagen() != null){
             icono.post(new Runnable() {
