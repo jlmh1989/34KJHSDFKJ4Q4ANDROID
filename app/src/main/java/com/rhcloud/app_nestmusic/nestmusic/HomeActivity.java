@@ -6,21 +6,25 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
 
@@ -74,8 +78,6 @@ public class HomeActivity extends Activity
     private MusicaService musicSrv;
     private Intent playIntent;
     private boolean musicBound=false;
-    private boolean paused=false;
-    private  boolean playbackPaused=false;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -399,7 +401,16 @@ public class HomeActivity extends Activity
         Utils.mostrarNotificacion(this, mensaje);
     }
 
+    private BroadcastReceiver onPrepareReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, Intent i) {
+            Log.w("BroadcastReceiver.onReceive()", "ejecutado");
+            musicaController.show(0);
+        }
+    };
+
     private void setMusicaController(){
+        Log.w("setMusicaController()", "ejecutado");
         musicaController = new MusicaController(this);
         musicaController.setPrevNextListeners(new View.OnClickListener() {
             @Override
@@ -412,7 +423,6 @@ public class HomeActivity extends Activity
                 playPrev();
             }
         });
-
         musicaController.setMediaPlayer(this);
         musicaController.setAnchorView(findViewById(R.id.container));
         musicaController.setEnabled(true);
@@ -420,10 +430,9 @@ public class HomeActivity extends Activity
 
     @Override
     protected void onStart() {
-        Log.w("onStar()", "Ejecutado");
+        Log.w("onStart()", "ejecutado");
         super.onStart();
         if(playIntent==null){
-            Log.w("playIntent", "Creado intent");
             //connect to the service
             ServiceConnection musicConnection = new ServiceConnection(){
                 @Override
@@ -432,7 +441,6 @@ public class HomeActivity extends Activity
                     musicSrv = binder.getService();
                     musicSrv.setListaCaciones(canciones);
                     musicBound = true;
-                    Log.w("MusicaConexion cantidad objeto", ""+canciones.size());
                 }
 
                 @Override
@@ -448,13 +456,16 @@ public class HomeActivity extends Activity
 
     @Override
     public void start() {
+        Log.w("start()", "ejecutado");
         musicSrv.go();
     }
 
     @Override
     public void pause() {
-        playbackPaused=true;
-        musicSrv.pausePlayer();
+        if(musicSrv.isPng()) {
+            Log.w("pause()", "ejecutado");
+            musicSrv.pausePlayer();
+        }
     }
 
     @Override
@@ -488,7 +499,8 @@ public class HomeActivity extends Activity
 
     @Override
     public int getBufferPercentage() {
-        return 0;
+        int porcentaje = (musicSrv.getPosn() * 100) / musicSrv.getDur();
+        return porcentaje;
     }
 
     @Override
@@ -513,43 +525,34 @@ public class HomeActivity extends Activity
 
     @Override
     protected void onPause(){
+        Log.w("onPause()", "ejecutado");
         super.onPause();
-        paused=true;
     }
 
     @Override
     protected void onResume(){
+        Log.w("onResume()", "ejecutado");
+        LocalBroadcastManager.getInstance(this).registerReceiver(onPrepareReceiver,
+                new IntentFilter("MEDIA_PLAYER_PREPARED"));
         super.onResume();
-        if(paused){
-            setMusicaController();
-            paused=false;
-        }
     }
 
     @Override
     protected void onStop() {
-        musicaController.hide();
+        Log.w("onStop()", "ejecutado");
         super.onStop();
     }
 
     //play next
     private void playNext(){
+        Log.w("playNext()", "ejecutado");
         musicSrv.playNext();
-        if(playbackPaused){
-            setMusicaController();
-            playbackPaused=false;
-        }
-        musicaController.show(0);
     }
 
     //play previous
     private void playPrev(){
+        Log.w("playPrev()", "ejecutado");
         musicSrv.playPrev();
-        if(playbackPaused){
-            setMusicaController();
-            playbackPaused=false;
-        }
-        musicaController.show(0);
     }
 
     @Override
@@ -571,14 +574,10 @@ public class HomeActivity extends Activity
 
     @Override
     public void setPosicionMusicaReproducir(int posicion) {
+        Log.w("setPosicionMusicaReproducir()", "ejecutado");
         if(musicSrv != null) {
             musicSrv.setCancion(posicion);
             musicSrv.playSong();
-            if(playbackPaused){
-                setMusicaController();
-                playbackPaused=false;
-            }
-            musicaController.show(0);
         }
     }
 

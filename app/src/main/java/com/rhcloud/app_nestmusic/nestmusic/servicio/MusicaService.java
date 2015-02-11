@@ -4,14 +4,20 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+import android.widget.MediaController;
 
 import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
 import com.rhcloud.app_nestmusic.nestmusic.R;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
+import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +40,7 @@ public class MusicaService extends Service
     private static final int NOTIFY_ID = 1;
     private boolean shuffle=false;
     private Random rand;
+    private Handler mHandler = new Handler();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,7 +57,7 @@ public class MusicaService extends Service
     public void onCreate(){
         super.onCreate();
         cancionPosicion = 0;
-        rand=new Random();
+        rand = new Random();
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         initMusicPlayer();
@@ -86,15 +93,16 @@ public class MusicaService extends Service
     }
 
     public void playSong(){
+        Log.w("MusicaService.playSong", "Ejecutado");
         player.reset();
         CancionBean cancion = canciones.get(cancionPosicion);
         try {
             player.setDataSource(getApplicationContext(), cancion.getPathMusica());
             songTitle = cancion.getTitulo();
+            player.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        player.prepareAsync();
     }
 
     @Override
@@ -110,7 +118,8 @@ public class MusicaService extends Service
     @Override
     public void onCompletion(MediaPlayer mp) {
         if(player.getCurrentPosition() > 0){
-            mp.reset();
+            Log.w("MusicaService.onCompletion", "Ejecutado");
+            player.reset();
             playNext();
         }
     }
@@ -123,23 +132,32 @@ public class MusicaService extends Service
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        mp.start();
-        Intent notIntent = new Intent(this, HomeActivity.class);
-        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
-                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.w("MusicaService.onPrepared", "Ejecutado");
+                player.start();
+                Intent notIntent = new Intent(MusicaService.this, HomeActivity.class);
+                notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendInt = PendingIntent.getActivity(MusicaService.this, 0,
+                        notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Builder builder = new Notification.Builder(this);
+                Notification.Builder builder = new Notification.Builder(MusicaService.this);
 
-        builder.setContentIntent(pendInt)
-                .setSmallIcon(R.drawable.audio)
-                .setTicker(songTitle)
-                .setOngoing(true)
-                .setContentTitle(getString(R.string.reproduciendo))
-                .setContentText(songTitle);
-        Notification not = builder.build();
+                builder.setContentIntent(pendInt)
+                        .setSmallIcon(R.drawable.play_notif)
+                        .setTicker(songTitle)
+                        .setOngoing(true)
+                        .setContentTitle(getString(R.string.reproduciendo))
+                        .setContentText(songTitle);
+                Notification not = builder.build();
 
-        startForeground(NOTIFY_ID, not);
+                startForeground(NOTIFY_ID, not);
+
+                Intent onPreparedIntent = new Intent("MEDIA_PLAYER_PREPARED");
+                LocalBroadcastManager.getInstance(MusicaService.this).sendBroadcast(onPreparedIntent);
+            }
+        });
     }
 
     public int getPosn(){
@@ -154,8 +172,33 @@ public class MusicaService extends Service
         return player.isPlaying();
     }
 
-    public void pausePlayer(){
-        player.pause();
+    public void pausePlayer() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.w("MusicaService.pausePlayer", "Ejecutado");
+                player.pause();
+                Intent notIntent = new Intent(MusicaService.this, HomeActivity.class);
+                notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendInt = PendingIntent.getActivity(MusicaService.this, 0,
+                        notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Notification.Builder builder = new Notification.Builder(MusicaService.this);
+
+                builder.setContentIntent(pendInt)
+                        .setSmallIcon(R.drawable.pause_notif)
+                        .setTicker(songTitle)
+                        .setOngoing(true)
+                        .setContentTitle(getString(R.string.pausado))
+                        .setContentText(songTitle);
+                Notification not = builder.build();
+
+                startForeground(NOTIFY_ID, not);
+
+                Intent onPreparedIntent = new Intent("MEDIA_PLAYER_PREPARED");
+                LocalBroadcastManager.getInstance(MusicaService.this).sendBroadcast(onPreparedIntent);
+            }
+        });
     }
 
     public void seek(int posn){
@@ -163,16 +206,42 @@ public class MusicaService extends Service
     }
 
     public void go(){
-        player.start();
-    }
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.w("MusicaService.go", "Ejecutado");
+                player.start();
+                Intent notIntent = new Intent(MusicaService.this, HomeActivity.class);
+                notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendInt = PendingIntent.getActivity(MusicaService.this, 0,
+                        notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+                Notification.Builder builder = new Notification.Builder(MusicaService.this);
+
+                builder.setContentIntent(pendInt)
+                        .setSmallIcon(R.drawable.play_notif)
+                        .setTicker(songTitle)
+                        .setOngoing(true)
+                        .setContentTitle(getString(R.string.reproduciendo))
+                        .setContentText(songTitle);
+                Notification not = builder.build();
+
+                startForeground(NOTIFY_ID, not);
+
+                Intent onPreparedIntent = new Intent("MEDIA_PLAYER_PREPARED");
+                LocalBroadcastManager.getInstance(MusicaService.this).sendBroadcast(onPreparedIntent);
+            }
+        });
+    }
     public void playPrev(){
+        Log.w("MusicaService.playPrev", "Ejecutado");
         cancionPosicion--;
         if(cancionPosicion < 0) cancionPosicion=canciones.size()-1;
         playSong();
     }
 
     public void playNext(){
+        Log.w("MusicaService.playNext", "Ejecutado");
         if(shuffle){
             int newSong = cancionPosicion;
             while(newSong==cancionPosicion){

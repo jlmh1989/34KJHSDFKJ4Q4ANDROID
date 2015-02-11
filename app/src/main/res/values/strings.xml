@@ -88,6 +88,7 @@
     <string name="seleccionado">seleccionado</string>
     <string name="error_leer_sd_externo">Error al obtener lista de música en EXTERNAL SD CARD.</string>
     <string name="reproduciendo">Reproduciendo</string>
+    <string name="pausado">Pausado</string>
     <!-- Fin mensajes -->
 
 
