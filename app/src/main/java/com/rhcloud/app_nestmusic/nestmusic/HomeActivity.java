@@ -19,6 +19,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telecom.TelecomManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -62,7 +65,8 @@ import java.util.ArrayList;
 public class HomeActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         MediaController.MediaPlayerControl,
-        MiMusica.MiMusicaCallbacks{
+        MiMusica.MiMusicaCallbacks,
+        Inicio.InicioCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -103,6 +107,40 @@ public class HomeActivity extends Activity
         usuario = intent.getStringExtra(Constantes.USUARIO);
         token = intent.getStringExtra(Constantes.TOKEN);
 
+        PhoneStateListener phoneStateListener = new PhoneStateListener(){
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                if (state == TelephonyManager.CALL_STATE_RINGING) {
+                    //INCOMING call
+                    Log.w("CALL_STATE_RINGING","Ejecutado");
+                    if (musicSrv != null) {
+                        if (musicSrv.isPng()) {
+                            musicSrv.pausePlayer();
+                        }
+                    }
+                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+                    //Not IN CALL
+                    Log.w("CALL_STATE_IDLE","Ejecutado");
+                    if(musicSrv != null){
+                        musicSrv.go();
+                    }
+                } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                    //A call is dialing
+                    Log.w("CALL_STATE_OFFHOOK","Ejecutado");
+                    if (musicSrv != null) {
+                        if (musicSrv.isPng()) {
+                            musicSrv.pausePlayer();
+                        }
+                    }
+                }
+                super.onCallStateChanged(state, incomingNumber);
+            }
+        };
+
+        TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        if(mgr != null){
+            mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
         setMusicaController();
     }
 
@@ -405,7 +443,7 @@ public class HomeActivity extends Activity
         @Override
         public void onReceive(Context c, Intent i) {
             Log.w("BroadcastReceiver.onReceive()", "ejecutado");
-            musicaController.show(0);
+            musicaController.show();
         }
     };
 
@@ -532,8 +570,10 @@ public class HomeActivity extends Activity
     @Override
     protected void onResume(){
         Log.w("onResume()", "ejecutado");
-        LocalBroadcastManager.getInstance(this).registerReceiver(onPrepareReceiver,
-                new IntentFilter("MEDIA_PLAYER_PREPARED"));
+        if (musicaController != null) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(onPrepareReceiver,
+                    new IntentFilter("MEDIA_PLAYER_PREPARED"));
+        }
         super.onResume();
     }
 
@@ -564,6 +604,7 @@ public class HomeActivity extends Activity
 
     @Override
     public void setListaCancionesMiMusica(ArrayList<CancionBean> canciones) {
+        this.canciones.clear();
         this.canciones.addAll(canciones);
     }
 
@@ -575,6 +616,26 @@ public class HomeActivity extends Activity
     @Override
     public void setPosicionMusicaReproducir(int posicion) {
         Log.w("setPosicionMusicaReproducir()", "ejecutado");
+        if(musicSrv != null) {
+            musicSrv.setCancion(posicion);
+            musicSrv.playSong();
+        }
+    }
+
+    @Override
+    public void setListaCancionesInicio(ArrayList<CancionBean> canciones) {
+        this.canciones.clear();
+        this.canciones.addAll(canciones);
+    }
+
+    @Override
+    public void setTituloActivityInicio(String titulo) {
+        mTitle = titulo;
+    }
+
+    @Override
+    public void setPosicionMusicaReproducirInicio(int posicion) {
+        Log.w("setPosicionMusicaReproducirInicio()", "ejecutado");
         if(musicSrv != null) {
             musicSrv.setCancion(posicion);
             musicSrv.playSong();

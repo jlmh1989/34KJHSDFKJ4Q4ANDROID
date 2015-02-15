@@ -186,10 +186,6 @@ public class MiMusica extends Fragment{
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity no implementa iterface.");
         }
-        /*
-        ((HomeActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
-         */
     }
 
     @Override

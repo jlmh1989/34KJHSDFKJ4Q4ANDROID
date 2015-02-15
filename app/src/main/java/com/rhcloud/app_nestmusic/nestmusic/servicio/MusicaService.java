@@ -14,7 +14,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.MediaController;
 
+import com.rhcloud.app_nestmusic.nestmusic.CallIntentReceiver;
 import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
+import com.rhcloud.app_nestmusic.nestmusic.MusicIntentReceiver;
 import com.rhcloud.app_nestmusic.nestmusic.R;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaController;
@@ -59,11 +61,16 @@ public class MusicaService extends Service
         cancionPosicion = 0;
         rand = new Random();
         player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         initMusicPlayer();
     }
 
     public void initMusicPlayer(){
+        IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        MusicIntentReceiver receiver = new MusicIntentReceiver(this);
+        //CallIntentReceiver callIntentReceiver = new CallIntentReceiver();
+        registerReceiver(receiver, receiverFilter);
+        //registerReceiver(callIntentReceiver, receiverFilter);
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
@@ -83,7 +90,38 @@ public class MusicaService extends Service
 
     @Override
     public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                // resume playback
+                Log.w("AUDIOFOCUS_GAIN", "Ejecutado");
+                if (player == null) initMusicPlayer();
+                else if (!isPng()) go();
+                player.setVolume(1.0f, 1.0f);
+                break;
 
+            case AudioManager.AUDIOFOCUS_LOSS:
+                // Lost focus for an unbounded amount of time: stop playback and release media player
+                Log.w("AUDIOFOCUS_LOSS", "Ejecutado");
+                if (isPng()) player.stop();
+                player.release();
+                player = null;
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                // Lost focus for a short time, but we have to stop
+                // playback. We don't release the media player because playback
+                // is likely to resume
+                Log.w("AUDIOFOCUS_LOSS_TRANSIENT", "Ejecutado");
+                if (isPng()) pausePlayer();
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                // Lost focus for a short time, but it's ok to keep playing
+                // at an attenuated level
+                Log.w("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK", "Ejecutado");
+                if (isPng()) player.setVolume(0.1f, 0.1f);
+                break;
+        }
     }
 
     public class MusicaBinder extends Binder{
@@ -96,8 +134,13 @@ public class MusicaService extends Service
         Log.w("MusicaService.playSong", "Ejecutado");
         player.reset();
         CancionBean cancion = canciones.get(cancionPosicion);
+        Log.w("CancionLeido", cancion.toString());
         try {
-            player.setDataSource(getApplicationContext(), cancion.getPathMusica());
+            if(cancion.isOnline()){
+                player.setDataSource(cancion.getUrlMusica());
+            }else{
+                player.setDataSource(getApplicationContext(), cancion.getPathMusica());
+            }
             songTitle = cancion.getTitulo();
             player.prepare();
         } catch (IOException e) {
@@ -107,6 +150,7 @@ public class MusicaService extends Service
 
     @Override
     public void onDestroy() {
+        if (player != null) player.release();
         stopForeground(true);
     }
 
@@ -137,9 +181,9 @@ public class MusicaService extends Service
             public void run() {
                 Log.w("MusicaService.onPrepared", "Ejecutado");
                 player.start();
-                Intent notIntent = new Intent(MusicaService.this, HomeActivity.class);
+                Intent notIntent = new Intent(getApplicationContext(), HomeActivity.class);
                 notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendInt = PendingIntent.getActivity(MusicaService.this, 0,
+                PendingIntent pendInt = PendingIntent.getActivity(getApplicationContext(), 0,
                         notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 Notification.Builder builder = new Notification.Builder(MusicaService.this);

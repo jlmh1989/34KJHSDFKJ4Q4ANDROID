@@ -17,9 +17,18 @@ public class CancionBean {
     private String urlMusica;
     private String urlParent;
     private long id;
+    private boolean isOnline;
 
     public CancionBean(){
+        this.isOnline = false;
+    }
 
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
     }
 
     public Bitmap getImagen() {

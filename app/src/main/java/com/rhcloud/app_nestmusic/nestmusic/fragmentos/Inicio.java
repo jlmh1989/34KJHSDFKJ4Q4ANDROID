@@ -67,6 +67,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     private ImageButton buscarMas;
     private ProgressBar cargandoBuscarMas;
     private TextView mensajeInicio;
+    private InicioCallbacks listener;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -121,8 +122,11 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //accion seleccion
+                listener.setPosicionMusicaReproducirInicio(position);
             }
         });
+
+        listener.setTituloActivityInicio(getString(R.string.menu_inicio));
 
         mensajeInicio = (TextView) rootView.findViewById(R.id.mensajeInicio);
         mensajeInicio.setVisibility(View.VISIBLE);
@@ -138,8 +142,11 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((HomeActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+        try {
+            listener = (InicioCallbacks) activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException("Activity no implementa iterface.");
+        }
     }
 
     @Override
@@ -178,6 +185,12 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     public boolean onQueryTextChange(String newText) {
 
         return false;
+    }
+
+    public static interface InicioCallbacks{
+        void setListaCancionesInicio(ArrayList<CancionBean> canciones);
+        void setTituloActivityInicio(String titulo);
+        void setPosicionMusicaReproducirInicio(int posicion);
     }
 
     private class RequestRest extends AsyncTask<String, Integer, Integer> {
@@ -245,6 +258,9 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                             cancionBean.setArtista(!cancion.getString("artista").equals("null") ? cancion.getString("artista") : getString(R.string.artista_desconocido));
                             cancionBean.setDuracion(getString(R.string.duracion_cancion) + " " + (!cancion.getString("duracion").equals("null") ? cancion.getString("duracion") : getString(R.string.desconocido)));
                             cancionBean.setImagenId(R.drawable.audio);
+                            cancionBean.setUrlMusica(cancion.getString("url"));
+                            cancionBean.setUrlParent(cancion.getString("urlParent"));
+                            cancionBean.setOnline(true);
                             adapterMusica.addCancion(cancionBean);
                         }
 
@@ -252,6 +268,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                             @Override
                             public void run() {
                                 adapterMusica.notifyDataSetChanged();
+                                listener.setListaCancionesInicio(adapterMusica.getListaCancion());
                             }
                         });
 

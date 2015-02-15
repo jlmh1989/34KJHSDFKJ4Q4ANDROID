@@ -50,7 +50,7 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         notifyDataSetChanged();
     }
 
-    public List<CancionBean> getListaCancion(){
+    public ArrayList<CancionBean> getListaCancion(){
         return listaCancion;
     }
 
