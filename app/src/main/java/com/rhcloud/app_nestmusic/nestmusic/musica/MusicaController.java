@@ -12,6 +12,8 @@ public class MusicaController extends MediaController {
         super(context);
     }
 
+    /**
     @Override
     public void hide(){}
+    */
 }

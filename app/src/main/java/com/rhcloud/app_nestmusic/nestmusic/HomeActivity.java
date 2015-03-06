@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MotionEventCompat;
 import android.telecom.TelecomManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -443,7 +444,7 @@ public class HomeActivity extends Activity
         @Override
         public void onReceive(Context c, Intent i) {
             Log.w("BroadcastReceiver.onReceive()", "ejecutado");
-            musicaController.show();
+            musicaController.show(Constantes.SHOW_CONTROLLER);
         }
     };
 
@@ -642,6 +643,10 @@ public class HomeActivity extends Activity
         }
     }
 
+    @Override
+    public void onTouchListInicio() {
+        musicaController.show(Constantes.SHOW_CONTROLLER);
+    }
 
     /**
      * Clase para manejar el request al servicio REST

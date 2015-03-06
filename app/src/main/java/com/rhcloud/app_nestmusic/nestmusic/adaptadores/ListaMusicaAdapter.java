@@ -96,6 +96,31 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
 
     @Override
     public View getView(int position, View view, ViewGroup parent){
+
+        CancionBean cancion = this.listaCancion.get(position);
+
+        /*
+        ViewHolder viewHolder;
+
+        if (view == null){
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = contexto.getLayoutInflater();
+            view = inflater.inflate(R.layout.lista_musica, parent, false);
+
+            viewHolder.titulo = (TextView) view.findViewById(R.id.titulo);
+            viewHolder.artista = (TextView) view.findViewById(R.id.artista);
+            viewHolder.duracion = (TextView) view.findViewById(R.id.duracion);
+            view.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) view.getTag();
+        }
+
+        viewHolder.titulo.setText(cancion.getTitulo());
+        viewHolder.artista.setText(cancion.getArtista());
+        viewHolder.duracion.setText(cancion.getDuracion());
+
+        */
+
         LayoutInflater inflater = contexto.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.lista_musica, parent, false);
 
@@ -103,13 +128,18 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         TextView artista = (TextView) rowView.findViewById(R.id.artista);
         TextView duracion = (TextView) rowView.findViewById(R.id.duracion);
 
-        CancionBean cancion = this.listaCancion.get(position);
-
         titulo.setText(cancion.getTitulo());
         artista.setText(cancion.getArtista());
         duracion.setText(cancion.getDuracion());
 
         return rowView;
+    }
+
+    // View lookup cache
+    private static class ViewHolder {
+        TextView titulo;
+        TextView artista;
+        TextView duracion;
     }
 
 }

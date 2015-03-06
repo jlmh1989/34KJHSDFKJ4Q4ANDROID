@@ -7,10 +7,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -102,6 +104,19 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                 .getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.lista_footer, null, false);
 
+        listaCancion.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = MotionEventCompat.getActionMasked(event);
+                switch(action) {
+                    case (MotionEvent.ACTION_MOVE) :
+                        listener.onTouchListInicio();
+                        return false;
+                }
+                return false;
+            }
+        });
+
         cargandoBuscarMas = (ProgressBar) footer.findViewById(R.id.pb_cargando_mas);
         buscarMas = (ImageButton) footer.findViewById(R.id.buscar_mas);
         buscarMas.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +206,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
         void setListaCancionesInicio(ArrayList<CancionBean> canciones);
         void setTituloActivityInicio(String titulo);
         void setPosicionMusicaReproducirInicio(int posicion);
+        void onTouchListInicio();
     }
 
     private class RequestRest extends AsyncTask<String, Integer, Integer> {

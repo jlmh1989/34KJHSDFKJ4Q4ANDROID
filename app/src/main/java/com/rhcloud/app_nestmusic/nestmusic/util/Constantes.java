@@ -46,4 +46,6 @@ public class Constantes {
 
     public static final int LIMITE_CONSULTA = 20;
 
+    public static final int SHOW_CONTROLLER = 3000;
+
 }
