@@ -43,6 +43,7 @@ import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Inicio;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.ListaReproduccion;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.MiMusica;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.NavigationDrawerFragment;
+import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaCallbacks;
 import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaController;
 import com.rhcloud.app_nestmusic.nestmusic.servicio.MusicaService;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
@@ -67,8 +68,7 @@ import java.util.ArrayList;
 public class HomeActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         MediaController.MediaPlayerControl,
-        MiMusica.MiMusicaCallbacks,
-        Inicio.InicioCallbacks{
+        MusicaCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -608,13 +608,13 @@ public class HomeActivity extends Activity
     }
 
     @Override
-    public void setListaCancionesMiMusica(ArrayList<CancionBean> canciones) {
+    public void setListaCanciones(ArrayList<CancionBean> canciones) {
         this.canciones.clear();
         this.canciones.addAll(canciones);
     }
 
     @Override
-    public void setTituloActivityMiMusica(String titulo) {
+    public void setTituloActivity(String titulo) {
         mTitle = titulo;
     }
 
@@ -631,47 +631,12 @@ public class HomeActivity extends Activity
     }
 
     @Override
-    public void setAdapterAbstractMiMusica(ListaMusicaAdapterAbstract adapterAbstract) {
+    public void setAdapterAbstract(ListaMusicaAdapterAbstract adapterAbstract) {
         musicSrv.setAdapterAbstract(adapterAbstract);
     }
 
     @Override
-    public void onTouchListMiMusica() {
-        if(!musicaController.isShowing() && musicSrv.isPng()) {
-            musicaController.show(Constantes.SHOW_CONTROLLER);
-        }
-    }
-
-    @Override
-    public void setListaCancionesInicio(ArrayList<CancionBean> canciones) {
-        this.canciones.clear();
-        this.canciones.addAll(canciones);
-    }
-
-    @Override
-    public void setAdapterAbstractInicio(ListaMusicaAdapterAbstract adapterAbstract) {
-        musicSrv.setAdapterAbstract(adapterAbstract);
-    }
-
-    @Override
-    public void setTituloActivityInicio(String titulo) {
-        mTitle = titulo;
-    }
-
-    @Override
-    public void setPosicionMusicaReproducirInicio(int posicion) {
-        Log.w("setPosicionMusicaReproducirInicio()", "ejecutado");
-        if(musicSrv != null) {
-            if(cancionActual != posicion) {
-                cancionActual = posicion;
-                musicSrv.setCancion(posicion);
-                musicSrv.playSong();
-            }
-        }
-    }
-
-    @Override
-    public void onTouchListInicio() {
+    public void onTouchList() {
         if(!musicaController.isShowing() && musicSrv.isPng()) {
             musicaController.show(Constantes.SHOW_CONTROLLER);
         }

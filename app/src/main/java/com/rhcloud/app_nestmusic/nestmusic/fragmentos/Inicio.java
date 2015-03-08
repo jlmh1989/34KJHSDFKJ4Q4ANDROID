@@ -27,6 +27,7 @@ import com.rhcloud.app_nestmusic.nestmusic.R;
 import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapter;
 import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapterAbstract;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
+import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaCallbacks;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
 
@@ -70,7 +71,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     private ImageButton buscarMas;
     private ProgressBar cargandoBuscarMas;
     private TextView mensajeInicio;
-    private InicioCallbacks listener;
+    private MusicaCallbacks listener;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -111,7 +112,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                 int action = MotionEventCompat.getActionMasked(event);
                 switch(action) {
                     case (MotionEvent.ACTION_MOVE) :
-                        listener.onTouchListInicio();
+                        listener.onTouchList();
                 }
                 return false;
             }
@@ -137,12 +138,11 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //accion seleccion
-                //adapterMusica.setPlayIcon(position);
-                listener.setPosicionMusicaReproducirInicio(position);
+                listener.setPosicionMusicaReproducir(position);
             }
         });
 
-        listener.setTituloActivityInicio(getString(R.string.menu_inicio));
+        listener.setTituloActivity(getString(R.string.menu_inicio));
 
         mensajeInicio = (TextView) rootView.findViewById(R.id.mensajeInicio);
         mensajeInicio.setVisibility(View.VISIBLE);
@@ -159,7 +159,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            listener = (InicioCallbacks) activity;
+            listener = (MusicaCallbacks) activity;
         }catch (ClassCastException e){
             throw new ClassCastException("Activity no implementa iterface.");
         }
@@ -201,14 +201,6 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
     public boolean onQueryTextChange(String newText) {
 
         return false;
-    }
-
-    public static interface InicioCallbacks{
-        void setListaCancionesInicio(ArrayList<CancionBean> canciones);
-        void setAdapterAbstractInicio(ListaMusicaAdapterAbstract adapterAbstract);
-        void setTituloActivityInicio(String titulo);
-        void setPosicionMusicaReproducirInicio(int posicion);
-        void onTouchListInicio();
     }
 
     private class RequestRest extends AsyncTask<String, Integer, Integer> {
@@ -286,8 +278,8 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                             @Override
                             public void run() {
                                 adapterMusica.notifyDataSetChanged();
-                                listener.setListaCancionesInicio(adapterMusica.getListaCancion());
-                                listener.setAdapterAbstractInicio(adapterMusica);
+                                listener.setListaCanciones(adapterMusica.getListaCancion());
+                                listener.setAdapterAbstract(adapterMusica);
                             }
                         });
 

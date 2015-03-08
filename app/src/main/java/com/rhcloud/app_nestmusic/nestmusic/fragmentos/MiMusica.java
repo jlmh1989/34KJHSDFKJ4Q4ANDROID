@@ -31,6 +31,7 @@ import com.rhcloud.app_nestmusic.nestmusic.R;
 import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapterAbstract;
 import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaHDAdapter;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
+import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaCallbacks;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
 
 import java.text.DateFormat;
@@ -50,7 +51,8 @@ public class MiMusica extends Fragment{
     private ProgressBar cargando;
     private EditText filtro;
     private ListaMusicaHDAdapter listaMusicaAdapter;
-    private MiMusicaCallbacks listener;
+    //private MiMusicaCallbacks listener;
+    private MusicaCallbacks listener;
 
     public static MiMusica newInstance(int sectionNumber){
         MiMusica fragment = new MiMusica();
@@ -115,7 +117,7 @@ public class MiMusica extends Fragment{
                 int action = MotionEventCompat.getActionMasked(event);
                 switch(action) {
                     case (MotionEvent.ACTION_MOVE) :
-                        listener.onTouchListMiMusica();
+                        listener.onTouchList();
                 }
                 return false;
             }
@@ -125,7 +127,7 @@ public class MiMusica extends Fragment{
 
         setHasOptionsMenu(true);
 
-        listener.setTituloActivityMiMusica(getString(R.string.menu_mi_musica));
+        listener.setTituloActivity(getString(R.string.menu_mi_musica));
 
         new ObtenerListaMusica().execute((Void)null);
 
@@ -186,8 +188,8 @@ public class MiMusica extends Fragment{
                     listaCancionView.setVisibility(View.VISIBLE);
                     filtro.setVisibility(View.VISIBLE);
                     listaMusicaAdapter.notifyDataSetChanged();
-                    listener.setListaCancionesMiMusica(listaMusicaAdapter.getListaMusica());
-                    listener.setAdapterAbstractMiMusica(listaMusicaAdapter);
+                    listener.setListaCanciones(listaMusicaAdapter.getListaMusica());
+                    listener.setAdapterAbstract(listaMusicaAdapter);
                 }
             });
             musicaCursor.close();
@@ -198,7 +200,7 @@ public class MiMusica extends Fragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try{
-            listener = (MiMusicaCallbacks) activity;
+            listener = (MusicaCallbacks) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity no implementa iterface.");
         }
@@ -212,14 +214,6 @@ public class MiMusica extends Fragment{
 
     private void mostrarNotificacion(String mensaje){
         Utils.mostrarNotificacion(getActivity(), mensaje);
-    }
-
-    public static interface MiMusicaCallbacks{
-        void setListaCancionesMiMusica(ArrayList<CancionBean> canciones);
-        void setTituloActivityMiMusica(String titulo);
-        void setPosicionMusicaReproducir(int posicion);
-        void setAdapterAbstractMiMusica(ListaMusicaAdapterAbstract adapterAbstract);
-        void onTouchListMiMusica();
     }
 
     private class ObtenerListaMusica extends AsyncTask<Void, Void, Boolean>{
