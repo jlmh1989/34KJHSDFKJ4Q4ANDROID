@@ -94,12 +94,24 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         notifyDataSetChanged();
     }
 
+    public void setPlayIcon(int posicion){
+        int tam = listaCancion.size();
+        for (int i = 0; i < tam; i++){
+            CancionBean cancionBean = listaCancion.get(i);
+            if(i == posicion) {
+                cancionBean.setPlaying(true);
+            }else {
+                cancionBean.setPlaying(false);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View view, ViewGroup parent){
 
         CancionBean cancion = this.listaCancion.get(position);
 
-        /*
         ViewHolder viewHolder;
 
         if (view == null){
@@ -110,6 +122,7 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
             viewHolder.titulo = (TextView) view.findViewById(R.id.titulo);
             viewHolder.artista = (TextView) view.findViewById(R.id.artista);
             viewHolder.duracion = (TextView) view.findViewById(R.id.duracion);
+            viewHolder.icon_play = (ImageView) view.findViewById(R.id.icon_play);
             view.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) view.getTag();
@@ -118,9 +131,15 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         viewHolder.titulo.setText(cancion.getTitulo());
         viewHolder.artista.setText(cancion.getArtista());
         viewHolder.duracion.setText(cancion.getDuracion());
+        if(cancion.isPlaying()){
+            viewHolder.icon_play.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.icon_play.setVisibility(View.GONE);
+        }
 
-        */
+        return view;
 
+        /*
         LayoutInflater inflater = contexto.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.lista_musica, parent, false);
 
@@ -133,6 +152,8 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         duracion.setText(cancion.getDuracion());
 
         return rowView;
+
+        */
     }
 
     // View lookup cache
@@ -140,6 +161,7 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         TextView titulo;
         TextView artista;
         TextView duracion;
+        ImageView icon_play;
     }
 
 }

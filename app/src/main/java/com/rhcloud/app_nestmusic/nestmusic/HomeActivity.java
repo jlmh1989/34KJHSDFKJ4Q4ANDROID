@@ -83,6 +83,7 @@ public class HomeActivity extends Activity
     private MusicaService musicSrv;
     private Intent playIntent;
     private boolean musicBound=false;
+    private int cancionActual = -1;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -638,14 +639,19 @@ public class HomeActivity extends Activity
     public void setPosicionMusicaReproducirInicio(int posicion) {
         Log.w("setPosicionMusicaReproducirInicio()", "ejecutado");
         if(musicSrv != null) {
-            musicSrv.setCancion(posicion);
-            musicSrv.playSong();
+            if(cancionActual != posicion) {
+                cancionActual = posicion;
+                musicSrv.setCancion(posicion);
+                musicSrv.playSong();
+            }
         }
     }
 
     @Override
     public void onTouchListInicio() {
-        musicaController.show(Constantes.SHOW_CONTROLLER);
+        if(!musicaController.isShowing() && musicSrv.isPng()) {
+            musicaController.show(Constantes.SHOW_CONTROLLER);
+        }
     }
 
     /**

@@ -18,9 +18,19 @@ public class CancionBean {
     private String urlParent;
     private long id;
     private boolean isOnline;
+    private boolean isPlaying;
 
     public CancionBean(){
         this.isOnline = false;
+        this.isPlaying = false;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
     }
 
     public boolean isOnline() {

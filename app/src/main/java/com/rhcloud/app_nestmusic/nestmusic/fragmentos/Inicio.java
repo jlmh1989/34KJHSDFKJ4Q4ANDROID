@@ -111,7 +111,6 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                 switch(action) {
                     case (MotionEvent.ACTION_MOVE) :
                         listener.onTouchListInicio();
-                        return false;
                 }
                 return false;
             }
@@ -137,6 +136,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //accion seleccion
+                adapterMusica.setPlayIcon(position);
                 listener.setPosicionMusicaReproducirInicio(position);
             }
         });
