@@ -13,10 +13,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.MediaStore;
+import android.support.v4.view.MotionEventCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,6 +28,7 @@ import android.widget.ProgressBar;
 
 import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
 import com.rhcloud.app_nestmusic.nestmusic.R;
+import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapterAbstract;
 import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaHDAdapter;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
@@ -106,6 +109,18 @@ public class MiMusica extends Fragment{
             }
         });
 
+        listaCancionView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = MotionEventCompat.getActionMasked(event);
+                switch(action) {
+                    case (MotionEvent.ACTION_MOVE) :
+                        listener.onTouchListMiMusica();
+                }
+                return false;
+            }
+        });
+
         cargando = (ProgressBar) rootView.findViewById(R.id.cargando);
 
         setHasOptionsMenu(true);
@@ -172,6 +187,7 @@ public class MiMusica extends Fragment{
                     filtro.setVisibility(View.VISIBLE);
                     listaMusicaAdapter.notifyDataSetChanged();
                     listener.setListaCancionesMiMusica(listaMusicaAdapter.getListaMusica());
+                    listener.setAdapterAbstractMiMusica(listaMusicaAdapter);
                 }
             });
             musicaCursor.close();
@@ -202,6 +218,8 @@ public class MiMusica extends Fragment{
         void setListaCancionesMiMusica(ArrayList<CancionBean> canciones);
         void setTituloActivityMiMusica(String titulo);
         void setPosicionMusicaReproducir(int posicion);
+        void setAdapterAbstractMiMusica(ListaMusicaAdapterAbstract adapterAbstract);
+        void onTouchListMiMusica();
     }
 
     private class ObtenerListaMusica extends AsyncTask<Void, Void, Boolean>{

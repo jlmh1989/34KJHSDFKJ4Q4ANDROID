@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
 import com.rhcloud.app_nestmusic.nestmusic.R;
 import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapter;
+import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapterAbstract;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.util.Constantes;
 import com.rhcloud.app_nestmusic.nestmusic.util.Utils;
@@ -136,7 +137,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //accion seleccion
-                adapterMusica.setPlayIcon(position);
+                //adapterMusica.setPlayIcon(position);
                 listener.setPosicionMusicaReproducirInicio(position);
             }
         });
@@ -204,6 +205,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
 
     public static interface InicioCallbacks{
         void setListaCancionesInicio(ArrayList<CancionBean> canciones);
+        void setAdapterAbstractInicio(ListaMusicaAdapterAbstract adapterAbstract);
         void setTituloActivityInicio(String titulo);
         void setPosicionMusicaReproducirInicio(int posicion);
         void onTouchListInicio();
@@ -285,6 +287,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                             public void run() {
                                 adapterMusica.notifyDataSetChanged();
                                 listener.setListaCancionesInicio(adapterMusica.getListaCancion());
+                                listener.setAdapterAbstractInicio(adapterMusica);
                             }
                         });
 

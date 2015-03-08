@@ -32,6 +32,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
 
+import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapterAbstract;
 import com.rhcloud.app_nestmusic.nestmusic.bd.SesionSQLiteHelper;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.fragmentos.Descargas;
@@ -84,6 +85,7 @@ public class HomeActivity extends Activity
     private Intent playIntent;
     private boolean musicBound=false;
     private int cancionActual = -1;
+    private ListaMusicaAdapterAbstract adapterAbstract;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -480,6 +482,7 @@ public class HomeActivity extends Activity
                     MusicaService.MusicaBinder binder = (MusicaService.MusicaBinder)service;
                     musicSrv = binder.getService();
                     musicSrv.setListaCaciones(canciones);
+                    musicSrv.setAdapterAbstract(adapterAbstract);
                     musicBound = true;
                 }
 
@@ -619,8 +622,23 @@ public class HomeActivity extends Activity
     public void setPosicionMusicaReproducir(int posicion) {
         Log.w("setPosicionMusicaReproducir()", "ejecutado");
         if(musicSrv != null) {
-            musicSrv.setCancion(posicion);
-            musicSrv.playSong();
+            if(cancionActual != posicion) {
+                cancionActual = posicion;
+                musicSrv.setCancion(posicion);
+                musicSrv.playSong();
+            }
+        }
+    }
+
+    @Override
+    public void setAdapterAbstractMiMusica(ListaMusicaAdapterAbstract adapterAbstract) {
+        musicSrv.setAdapterAbstract(adapterAbstract);
+    }
+
+    @Override
+    public void onTouchListMiMusica() {
+        if(!musicaController.isShowing() && musicSrv.isPng()) {
+            musicaController.show(Constantes.SHOW_CONTROLLER);
         }
     }
 
@@ -628,6 +646,11 @@ public class HomeActivity extends Activity
     public void setListaCancionesInicio(ArrayList<CancionBean> canciones) {
         this.canciones.clear();
         this.canciones.addAll(canciones);
+    }
+
+    @Override
+    public void setAdapterAbstractInicio(ListaMusicaAdapterAbstract adapterAbstract) {
+        musicSrv.setAdapterAbstract(adapterAbstract);
     }
 
     @Override

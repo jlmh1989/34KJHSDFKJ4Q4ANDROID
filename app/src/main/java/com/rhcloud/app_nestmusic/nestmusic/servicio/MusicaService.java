@@ -18,6 +18,7 @@ import com.rhcloud.app_nestmusic.nestmusic.CallIntentReceiver;
 import com.rhcloud.app_nestmusic.nestmusic.HomeActivity;
 import com.rhcloud.app_nestmusic.nestmusic.MusicIntentReceiver;
 import com.rhcloud.app_nestmusic.nestmusic.R;
+import com.rhcloud.app_nestmusic.nestmusic.adaptadores.ListaMusicaAdapterAbstract;
 import com.rhcloud.app_nestmusic.nestmusic.bean.CancionBean;
 import com.rhcloud.app_nestmusic.nestmusic.musica.MusicaController;
 
@@ -43,6 +44,7 @@ public class MusicaService extends Service
     private boolean shuffle=false;
     private Random rand;
     private Handler mHandler = new Handler();
+    private ListaMusicaAdapterAbstract adapterAbstract;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -74,6 +76,10 @@ public class MusicaService extends Service
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
+    }
+
+    public void setAdapterAbstract(ListaMusicaAdapterAbstract adapterAbstract){
+        this.adapterAbstract = adapterAbstract;
     }
 
     public void setListaCaciones(ArrayList<CancionBean> canciones){
@@ -142,6 +148,7 @@ public class MusicaService extends Service
                 player.setDataSource(getApplicationContext(), cancion.getPathMusica());
             }
             songTitle = cancion.getTitulo();
+            adapterAbstract.setPlayIcon(cancionPosicion);
             player.prepare();
         } catch (IOException e) {
             e.printStackTrace();

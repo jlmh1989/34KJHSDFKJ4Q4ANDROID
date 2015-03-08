@@ -19,7 +19,7 @@ import java.util.Locale;
 /**
  * Created by Jose Luis Martinez on 18/01/15.
  */
-public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
+public class ListaMusicaAdapter extends ListaMusicaAdapterAbstract {
 
     private final Activity contexto;
     private ArrayList<CancionBean> listaCancion;
@@ -138,22 +138,6 @@ public class ListaMusicaAdapter extends ArrayAdapter<CancionBean> {
         }
 
         return view;
-
-        /*
-        LayoutInflater inflater = contexto.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.lista_musica, parent, false);
-
-        TextView titulo = (TextView) rowView.findViewById(R.id.titulo);
-        TextView artista = (TextView) rowView.findViewById(R.id.artista);
-        TextView duracion = (TextView) rowView.findViewById(R.id.duracion);
-
-        titulo.setText(cancion.getTitulo());
-        artista.setText(cancion.getArtista());
-        duracion.setText(cancion.getDuracion());
-
-        return rowView;
-
-        */
     }
 
     // View lookup cache
