@@ -22,10 +22,9 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/icon"
         android:layout_marginRight="5dp"
-        android:visibility="gone"
         android:layout_toRightOf="@id/icon"
         android:contentDescription="@string/icono_menu"
-        android:src="@drawable/play_list" />
+        android:src="@drawable/play_activo" />
 
     <TextView
         android:id="@+id/duracion"

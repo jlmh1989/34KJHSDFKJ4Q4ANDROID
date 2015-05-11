@@ -591,13 +591,31 @@ public class HomeActivity extends Activity
     //play next
     private void playNext(){
         Log.w("playNext()", "ejecutado");
-        musicSrv.playNext();
+        try {
+            musicSrv.playNext();
+        } catch (IOException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mostrarNotificacion(getString(R.string.error_recurso));
+                }
+            });
+        }
     }
 
     //play previous
     private void playPrev(){
         Log.w("playPrev()", "ejecutado");
-        musicSrv.playPrev();
+        try {
+            musicSrv.playPrev();
+        } catch (IOException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mostrarNotificacion(getString(R.string.error_recurso));
+                }
+            });
+        }
     }
 
     @Override
@@ -625,7 +643,16 @@ public class HomeActivity extends Activity
             if(cancionActual != posicion) {
                 cancionActual = posicion;
                 musicSrv.setCancion(posicion);
-                musicSrv.playSong();
+                try {
+                    musicSrv.playSong();
+                } catch (IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mostrarNotificacion(getString(R.string.error_recurso));
+                        }
+                    });
+                }
             }
         }
     }
@@ -637,9 +664,21 @@ public class HomeActivity extends Activity
 
     @Override
     public void onTouchList() {
-        if(!musicaController.isShowing() && musicSrv.isPng()) {
+        if(!musicaController.isShowing() && (musicSrv.isPng() || musicSrv.isPause())) {
             musicaController.show(Constantes.SHOW_CONTROLLER);
         }
+    }
+
+    public void agregarAFavorito(View view){
+        Log.i("ADD", "Favorito");
+    }
+
+    public void agregarAListaReproduccion(View view){
+        Log.i("ADD", "Lista Rep");
+    }
+
+    public void descargar(View view){
+        Log.i("ADD", "Descargar");
     }
 
     /**

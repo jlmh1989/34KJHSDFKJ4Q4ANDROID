@@ -1,12 +1,17 @@
 package com.rhcloud.app_nestmusic.nestmusic.adaptadores;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.util.SparseBooleanArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rhcloud.app_nestmusic.nestmusic.R;
@@ -25,9 +30,11 @@ public class ListaMusicaAdapter extends ListaMusicaAdapterAbstract {
     private ArrayList<CancionBean> listaCancion;
     private ArrayList<CancionBean> listaOriginal;
     private SparseBooleanArray itemsSeleccionados;
+    private int alturaNormal;
+    private int altura90dp;
 
     public ListaMusicaAdapter(Activity contexto, ArrayList<CancionBean> listaCancion){
-        super(contexto, R.layout.lista_musica, listaCancion);
+        super(contexto, R.layout.lista_musica_v2, listaCancion);
         itemsSeleccionados = new SparseBooleanArray();
         this.contexto = contexto;
         this.listaCancion = listaCancion;
@@ -117,12 +124,25 @@ public class ListaMusicaAdapter extends ListaMusicaAdapterAbstract {
         if (view == null){
             viewHolder = new ViewHolder();
             LayoutInflater inflater = contexto.getLayoutInflater();
-            view = inflater.inflate(R.layout.lista_musica, parent, false);
+            view = inflater.inflate(R.layout.lista_musica_v2, parent, false);
 
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            TypedValue value = new TypedValue();
+            DisplayMetrics metrics = new DisplayMetrics();
+            getContext().getTheme().resolveAttribute(
+                    android.R.attr.listPreferredItemHeight, value, true);
+            ((WindowManager) (getContext().getSystemService(getContext().WINDOW_SERVICE)))
+                    .getDefaultDisplay().getMetrics(metrics);
+            layoutParams.height = (int) TypedValue.complexToDimension(value.data, metrics);
+            alturaNormal = layoutParams.height;
+            altura90dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, getContext().getResources().getDisplayMetrics());
             viewHolder.titulo = (TextView) view.findViewById(R.id.titulo);
             viewHolder.artista = (TextView) view.findViewById(R.id.artista);
             viewHolder.duracion = (TextView) view.findViewById(R.id.duracion);
             viewHolder.icon_play = (ImageView) view.findViewById(R.id.icon_play);
+            viewHolder.icon_favorito = (ImageView) view.findViewById(R.id.icon_favorito);
+            viewHolder.icon_listaRep = (ImageView) view.findViewById(R.id.icon_listaRep);
+            viewHolder.icon_descargar = (ImageView) view.findViewById(R.id.icon_descargar);
             view.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) view.getTag();
@@ -131,21 +151,36 @@ public class ListaMusicaAdapter extends ListaMusicaAdapterAbstract {
         viewHolder.titulo.setText(cancion.getTitulo());
         viewHolder.artista.setText(cancion.getArtista());
         viewHolder.duracion.setText(cancion.getDuracion());
+
         if(cancion.isPlaying()){
+            viewHolder.icon_play.setImageResource(R.drawable.play_activo);
             viewHolder.icon_play.setVisibility(View.VISIBLE);
+            viewHolder.icon_favorito.setVisibility(View.VISIBLE);
+            viewHolder.icon_listaRep.setVisibility(View.VISIBLE);
+            viewHolder.icon_descargar.setVisibility(View.VISIBLE);
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            layoutParams.height = altura90dp;
         }else{
+            viewHolder.icon_play.setImageResource(R.drawable.play_inactivo);
             viewHolder.icon_play.setVisibility(View.GONE);
+            viewHolder.icon_favorito.setVisibility(View.GONE);
+            viewHolder.icon_listaRep.setVisibility(View.GONE);
+            viewHolder.icon_descargar.setVisibility(View.GONE);
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            layoutParams.height = alturaNormal;
         }
 
         return view;
     }
 
-    // View lookup cache
     private static class ViewHolder {
         TextView titulo;
         TextView artista;
         TextView duracion;
         ImageView icon_play;
+        ImageView icon_favorito;
+        ImageView icon_listaRep;
+        ImageView icon_descargar;
     }
 
 }

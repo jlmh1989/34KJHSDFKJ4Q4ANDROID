@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -138,6 +139,7 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //accion seleccion
+                listaCancion.setItemChecked(position, false);
                 listener.setPosicionMusicaReproducir(position);
             }
         });
@@ -266,7 +268,9 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
                             CancionBean cancionBean = new CancionBean();
                             cancionBean.setTitulo(cancion.getString("nombre"));
                             cancionBean.setArtista(!cancion.getString("artista").equals("null") ? cancion.getString("artista") : getString(R.string.artista_desconocido));
+                            cancionBean.setArtistaOrig(cancion.getString("artista"));
                             cancionBean.setDuracion(getString(R.string.duracion_cancion) + " " + (!cancion.getString("duracion").equals("null") ? cancion.getString("duracion") : getString(R.string.desconocido)));
+                            cancionBean.setDuracionOrig(cancion.getString("duracion"));
                             cancionBean.setImagenId(R.drawable.audio);
                             cancionBean.setUrlMusica(cancion.getString("url"));
                             cancionBean.setUrlParent(cancion.getString("urlParent"));
@@ -335,7 +339,9 @@ public class Inicio extends Fragment implements SearchView.OnQueryTextListener{
         @Override
         protected void onPostExecute(Integer result) {
             if(busquedaNueva) {
-                listaCancion.setVisibility(View.VISIBLE);
+                if(result == 200){
+                    listaCancion.setVisibility(View.VISIBLE);
+                }
                 cargando.setVisibility(View.GONE);
             }else {
                 cargandoBuscarMas.setVisibility(View.GONE);

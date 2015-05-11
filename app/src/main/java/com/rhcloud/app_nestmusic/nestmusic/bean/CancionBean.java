@@ -11,7 +11,9 @@ public class CancionBean {
     private Integer imagenId;
     private String titulo;
     private String artista;
+    private String artistaOrig;
     private String duracion;
+    private String duracionOrig;
     private Bitmap imagen;
     private Uri pathMusica;
     private String urlMusica;
@@ -23,6 +25,22 @@ public class CancionBean {
     public CancionBean(){
         this.isOnline = false;
         this.isPlaying = false;
+    }
+
+    public String getArtistaOrig() {
+        return artistaOrig;
+    }
+
+    public void setArtistaOrig(String artistaOrig) {
+        this.artistaOrig = artistaOrig;
+    }
+
+    public String getDuracionOrig() {
+        return duracionOrig;
+    }
+
+    public void setDuracionOrig(String duracionOrig) {
+        this.duracionOrig = duracionOrig;
     }
 
     public boolean isPlaying() {

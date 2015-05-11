@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="?android:attr/listPreferredItemHeight"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/icono_menu"
+        android:src="@drawable/audio" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:text="Titulo cancion"
+        android:id="@+id/titulo"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textStyle="bold"
+        android:singleLine="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:text="Artista"
+        android:id="@+id/artista"
+        android:layout_below="@+id/titulo"
+        android:layout_alignLeft="@+id/titulo"
+        android:layout_alignStart="@+id/titulo"
+        android:layout_alignRight="@+id/titulo"
+        android:layout_alignEnd="@+id/titulo"
+        android:singleLine="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:text="Duracion"
+        android:id="@+id/duracion"
+        android:layout_below="@+id/artista"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_alignRight="@+id/artista"
+        android:layout_alignEnd="@+id/artista" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:id="@+id/icon_play"
+        android:layout_alignBottom="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        android:contentDescription="@string/icono_menu"
+        android:src="@drawable/play_inactivo"
+        android:background="?android:attr/activatedBackgroundIndicator" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:id="@+id/icon_favorito"
+        android:layout_alignBottom="@+id/icon_play"
+        android:layout_toRightOf="@+id/icon_play"
+        android:layout_toEndOf="@+id/icon_play"
+        android:contentDescription="@string/icono_menu"
+        android:layout_marginLeft="24dp"
+        android:src="@drawable/favorito_inactivo"
+        android:scaleType="centerInside"
+        android:onClick="agregarAFavorito"
+        android:visibility="gone"
+        android:background="?android:attr/activatedBackgroundIndicator" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:id="@+id/icon_listaRep"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/icon_favorito"
+        android:layout_toEndOf="@+id/icon_favorito"
+        android:layout_marginLeft="24dp"
+        android:src="@drawable/agregar_a_lista"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        android:onClick="agregarAListaReproduccion"
+        android:contentDescription="@string/icono_menu"
+        android:background="?android:attr/activatedBackgroundIndicator" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:id="@+id/icon_descargar"
+        android:layout_alignBottom="@+id/icon_listaRep"
+        android:layout_toRightOf="@+id/icon_listaRep"
+        android:layout_toEndOf="@+id/icon_listaRep"
+        android:layout_marginLeft="24dp"
+        android:src="@drawable/descargar"
+        android:onClick="descargar"
+        android:visibility="gone"
+        android:contentDescription="@string/icono_menu"
+        android:background="?android:attr/activatedBackgroundIndicator" />
+
+</RelativeLayout>

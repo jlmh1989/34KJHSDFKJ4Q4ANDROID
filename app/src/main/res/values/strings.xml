@@ -51,6 +51,7 @@
 
 
     <!-- Mensajea -->
+    <string name="error_recurso">Error al reproducir, recurso no disponible.</string>
     <string name="error_conexion">Error de conexión.</string>
     <string name="error_servidor">No se puede conectar con el servidor.</string>
     <string name="error_datos">Error al recibir los datos.</string>
